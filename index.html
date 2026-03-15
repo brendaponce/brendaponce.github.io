@@ -1,1 +1,1017 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Photo Gallery</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #fafaf8;
+      --surface: #ffffff;
+      --border: #ebebeb;
+      --text: #2a2a2a;
+      --muted: #9a9a9a;
+      --accent: #c8a97e;
+      --accent-light: #f5efe6;
+      --danger: #e07070;
+      --shadow: 0 2px 12px rgba(0,0,0,0.06);
+      --shadow-hover: 0 6px 24px rgba(0,0,0,0.10);
+      --radius: 12px;
+      --font: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .logo svg { opacity: 0.7; }
+
+    .header-actions { display: flex; gap: 10px; }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 18px;
+      border-radius: 8px;
+      border: none;
+      font-family: var(--font);
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--text);
+      color: #fff;
+    }
+    .btn-primary:hover { background: #444; }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-outline:hover { background: var(--bg); border-color: #ccc; }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--muted);
+      padding: 6px 10px;
+    }
+    .btn-ghost:hover { background: var(--bg); color: var(--text); }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-danger:hover { background: #c85c5c; }
+
+    /* ── Layout ── */
+    .layout {
+      display: flex;
+      flex: 1;
+      min-height: 0;
+    }
+
+    /* ── Sidebar ── */
+    aside {
+      width: 220px;
+      flex-shrink: 0;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding: 24px 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-section-title {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 20px 10px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 20px;
+      font-size: 0.9rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: background 0.12s;
+      border-radius: 0;
+      position: relative;
+      user-select: none;
+    }
+    .nav-item:hover { background: var(--bg); }
+    .nav-item.active {
+      background: var(--accent-light);
+      color: #7a5c35;
+      font-weight: 500;
+    }
+    .nav-item.active::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 4px; bottom: 4px;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .nav-item .count {
+      margin-left: auto;
+      font-size: 0.75rem;
+      color: var(--muted);
+      background: var(--bg);
+      padding: 1px 7px;
+      border-radius: 10px;
+    }
+
+    .nav-album-actions {
+      display: none;
+      gap: 2px;
+      margin-left: auto;
+    }
+    .nav-item:hover .nav-album-actions { display: flex; }
+    .nav-item:hover .count { display: none; }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px 4px;
+      border-radius: 4px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      line-height: 1;
+    }
+    .icon-btn:hover { background: rgba(0,0,0,0.08); color: var(--text); }
+
+    .sidebar-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 16px 20px;
+    }
+
+    .sidebar-add-album {
+      padding: 0 20px;
+    }
+
+    /* ── Main ── */
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+    }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+    }
+
+    .page-subtitle {
+      font-size: 0.875rem;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    /* ── Upload zone ── */
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius);
+      padding: 40px;
+      text-align: center;
+      color: var(--muted);
+      transition: all 0.2s;
+      cursor: pointer;
+      margin-bottom: 32px;
+      background: var(--surface);
+    }
+    .upload-zone:hover,
+    .upload-zone.drag-over {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      color: #7a5c35;
+    }
+    .upload-zone svg { margin-bottom: 10px; opacity: 0.5; }
+    .upload-zone p { font-size: 0.9rem; }
+    .upload-zone span { font-size: 0.8rem; opacity: 0.7; }
+
+    /* ── Photo grid ── */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .photo-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: all 0.2s;
+      cursor: pointer;
+      position: relative;
+    }
+    .photo-card:hover {
+      box-shadow: var(--shadow-hover);
+      transform: translateY(-2px);
+    }
+
+    .photo-card img {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-card-footer {
+      padding: 10px 12px;
+    }
+
+    .photo-name {
+      font-size: 0.8rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .photo-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      opacity: 0;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: var(--radius);
+    }
+    .photo-card:hover .photo-card-overlay { opacity: 1; }
+
+    .overlay-btn {
+      background: rgba(255,255,255,0.92);
+      border: none;
+      border-radius: 8px;
+      padding: 7px 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .overlay-btn:hover { background: #fff; }
+    .overlay-btn.danger { color: var(--danger); }
+
+    /* ── Empty state ── */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+    .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 1rem; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .empty-state p { font-size: 0.875rem; }
+
+    /* ── Modals ── */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.35);
+      backdrop-filter: blur(3px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .modal {
+      background: var(--surface);
+      border-radius: 16px;
+      padding: 32px;
+      width: 420px;
+      max-width: 95vw;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transform: translateY(10px);
+      transition: transform 0.2s;
+    }
+    .modal-backdrop.open .modal { transform: translateY(0); }
+
+    .modal-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-family: var(--font);
+      font-size: 0.9rem;
+      color: var(--text);
+      background: var(--bg);
+      transition: border-color 0.15s;
+      outline: none;
+    }
+    .form-input:focus { border-color: var(--accent); }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* ── Lightbox ── */
+    .lightbox-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 300;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+    .lightbox-backdrop.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: fixed;
+      top: 20px;
+      right: 24px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+
+    .lightbox-info {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.85);
+      padding: 8px 20px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      backdrop-filter: blur(6px);
+      text-align: center;
+    }
+
+    .lightbox-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.12);
+      border: none;
+      color: #fff;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .lightbox-nav:hover { background: rgba(255,255,255,0.22); }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
+    /* ── Move to album modal select ── */
+    .album-list-select {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    .album-option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.15s;
+      font-size: 0.9rem;
+    }
+    .album-option:hover { border-color: var(--accent); background: var(--accent-light); }
+    .album-option.selected { border-color: var(--accent); background: var(--accent-light); font-weight: 500; }
+
+    /* ── Toast ── */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 500;
+    }
+
+    .toast {
+      background: var(--text);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      box-shadow: var(--shadow-hover);
+      animation: slideIn 0.2s ease;
+    }
+
+    @keyframes slideIn {
+      from { transform: translateX(20px); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 640px) {
+      aside { display: none; }
+      main { padding: 20px 16px; }
+      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<header>
+  <div class="logo">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
+      <rect x="3" y="3" width="18" height="18" rx="3"/>
+      <circle cx="8.5" cy="8.5" r="1.5"/>
+      <path d="M21 15l-5-5L5 21"/>
+    </svg>
+    My Gallery
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="openAlbumModal()">+ New Album</button>
+    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Upload Photos</button>
+  </div>
+</header>
+
+<input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFileSelect(event)" />
+
+<div class="layout">
+  <!-- Sidebar -->
+  <aside>
+    <div class="sidebar-section-title">Library</div>
+    <div class="nav-item active" data-view="all" onclick="setView('all')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      All Photos
+      <span class="count" id="total-count">0</span>
+    </div>
+
+    <hr class="sidebar-divider" />
+    <div class="sidebar-section-title">Albums</div>
+    <div id="album-nav"></div>
+
+    <div class="sidebar-add-album" style="margin-top:8px;">
+      <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;gap:8px;font-size:0.85rem;" onclick="openAlbumModal()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+        New Album
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="view-title">All Photos</div>
+        <div class="page-subtitle" id="view-subtitle">Your entire collection</div>
+      </div>
+    </div>
+
+    <!-- Upload Zone -->
+    <div class="upload-zone" id="uploadZone"
+         onclick="document.getElementById('fileInput').click()"
+         ondragover="onDragOver(event)"
+         ondragleave="onDragLeave(event)"
+         ondrop="onDrop(event)">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" display="block" style="margin:0 auto 10px;">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <p>Drop photos here or click to upload</p>
+      <span>Supports JPG, PNG, GIF, WEBP</span>
+    </div>
+
+    <!-- Photo Grid -->
+    <div class="photo-grid" id="photoGrid"></div>
+
+    <!-- Empty State -->
+    <div class="empty-state" id="emptyState" style="display:none;">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" display="block" style="margin:0 auto 16px;">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <path d="M21 15l-5-5L5 21"/>
+      </svg>
+      <h3 id="empty-title">No photos yet</h3>
+      <p id="empty-desc">Upload some photos to get started</p>
+    </div>
+  </main>
+</div>
+
+<!-- Create/Edit Album Modal -->
+<div class="modal-backdrop" id="albumModal" onclick="closeOnBackdrop(event,'albumModal')">
+  <div class="modal">
+    <div class="modal-title" id="albumModalTitle">New Album</div>
+    <div class="form-group">
+      <label class="form-label">Album Name</label>
+      <input class="form-input" id="albumNameInput" placeholder="e.g. Summer 2024" onkeydown="if(event.key==='Enter')saveAlbum()" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Description (optional)</label>
+      <input class="form-input" id="albumDescInput" placeholder="A short description..." />
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('albumModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveAlbum()">Save Album</button>
+    </div>
+  </div>
+</div>
+
+<!-- Move to Album Modal -->
+<div class="modal-backdrop" id="moveModal" onclick="closeOnBackdrop(event,'moveModal')">
+  <div class="modal">
+    <div class="modal-title">Add to Album</div>
+    <div class="album-list-select" id="albumListSelect"></div>
+    <div class="form-actions">
+      <button class="btn btn-outline" onclick="closeModal('moveModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmMove()">Add to Album</button>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox-backdrop" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightboxDirect()">✕</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&#8592;</button>
+  <img class="lightbox-img" id="lightboxImg" src="" alt="" />
+  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">&#8594;</button>
+  <div class="lightbox-info" id="lightboxInfo"></div>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+// ── State ──
+let state = {
+  photos: [],    // {id, name, src, albumIds, uploadedAt}
+  albums: [],    // {id, name, desc, createdAt}
+  currentView: 'all',
+  editingAlbumId: null,
+  movingPhotoId: null,
+  selectedAlbumId: null,
+  lightboxIndex: 0,
+};
+
+const STORAGE_KEY = 'photoGallery_v1';
+
+function save() {
+  // Only store metadata, not image data (images stored separately)
+  const data = {
+    photos: state.photos.map(p => ({ id: p.id, name: p.name, albumIds: p.albumIds, uploadedAt: p.uploadedAt })),
+    albums: state.albums,
+  };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // Store images separately
+  state.photos.forEach(p => {
+    try { localStorage.setItem(`photo_src_${p.id}`, p.src); } catch(e) {}
+  });
+}
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    state.albums = data.albums || [];
+    state.photos = (data.photos || []).map(p => ({
+      ...p,
+      src: localStorage.getItem(`photo_src_${p.id}`) || ''
+    })).filter(p => p.src);
+  } catch(e) {}
+}
+
+// ── Render ──
+function render() {
+  renderAlbumNav();
+  renderGrid();
+  renderCounts();
+}
+
+function renderAlbumNav() {
+  const nav = document.getElementById('album-nav');
+  nav.innerHTML = state.albums.map(a => {
+    const count = state.photos.filter(p => p.albumIds.includes(a.id)).length;
+    return `
+    <div class="nav-item ${state.currentView === a.id ? 'active' : ''}" onclick="setView('${a.id}')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(a.name)}</span>
+      <span class="count">${count}</span>
+      <span class="nav-album-actions">
+        <button class="icon-btn" title="Rename" onclick="event.stopPropagation();openEditAlbum('${a.id}')">✎</button>
+        <button class="icon-btn" title="Delete" onclick="event.stopPropagation();deleteAlbum('${a.id}')">✕</button>
+      </span>
+    </div>`;
+  }).join('');
+}
+
+function renderCounts() {
+  document.getElementById('total-count').textContent = state.photos.length;
+}
+
+function getViewPhotos() {
+  if (state.currentView === 'all') return state.photos;
+  return state.photos.filter(p => p.albumIds.includes(state.currentView));
+}
+
+function renderGrid() {
+  const photos = getViewPhotos();
+  const grid = document.getElementById('photoGrid');
+  const empty = document.getElementById('emptyState');
+
+  if (photos.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    if (state.currentView === 'all') {
+      document.getElementById('empty-title').textContent = 'No photos yet';
+      document.getElementById('empty-desc').textContent = 'Upload some photos to get started';
+    } else {
+      const album = state.albums.find(a => a.id === state.currentView);
+      document.getElementById('empty-title').textContent = 'Album is empty';
+      document.getElementById('empty-desc').textContent = `Add photos to "${album?.name || 'this album'}" using the Add to Album option`;
+    }
+    return;
+  }
+
+  empty.style.display = 'none';
+  grid.innerHTML = photos.map((p, idx) => `
+    <div class="photo-card" onclick="openLightbox(${idx})">
+      <img src="${p.src}" alt="${escHtml(p.name)}" loading="lazy" />
+      <div class="photo-card-footer">
+        <div class="photo-name">${escHtml(p.name)}</div>
+      </div>
+      <div class="photo-card-overlay">
+        <button class="overlay-btn" onclick="event.stopPropagation();openMove('${p.id}')">+ Album</button>
+        <button class="overlay-btn danger" onclick="event.stopPropagation();deletePhoto('${p.id}')">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── View ──
+function setView(view) {
+  state.currentView = view;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const el = view === 'all'
+    ? document.querySelector('[data-view="all"]')
+    : null;
+  if (el) el.classList.add('active');
+
+  const titleEl = document.getElementById('view-title');
+  const subtitleEl = document.getElementById('view-subtitle');
+
+  if (view === 'all') {
+    titleEl.textContent = 'All Photos';
+    subtitleEl.textContent = 'Your entire collection';
+  } else {
+    const album = state.albums.find(a => a.id === view);
+    titleEl.textContent = album?.name || 'Album';
+    subtitleEl.textContent = album?.desc || '';
+  }
+
+  render();
+}
+
+// ── Upload ──
+function handleFileSelect(e) {
+  handleFiles([...e.target.files]);
+  e.target.value = '';
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.add('drag-over');
+}
+function onDragLeave(e) {
+  document.getElementById('uploadZone').classList.remove('drag-over');
+}
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('drag-over');
+  handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
+}
+
+function handleFiles(files) {
+  let loaded = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const photo = {
+        id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2),
+        name: file.name.replace(/\.[^.]+$/, ''),
+        src: e.target.result,
+        albumIds: state.currentView !== 'all' ? [state.currentView] : [],
+        uploadedAt: new Date().toISOString(),
+      };
+      state.photos.unshift(photo);
+      loaded++;
+      if (loaded === files.length) {
+        save();
+        render();
+        toast(`${files.length} photo${files.length > 1 ? 's' : ''} uploaded`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+// ── Albums ──
+function openAlbumModal() {
+  state.editingAlbumId = null;
+  document.getElementById('albumModalTitle').textContent = 'New Album';
+  document.getElementById('albumNameInput').value = '';
+  document.getElementById('albumDescInput').value = '';
+  openModal('albumModal');
+  setTimeout(() => document.getElementById('albumNameInput').focus(), 100);
+}
+
+function openEditAlbum(id) {
+  const album = state.albums.find(a => a.id === id);
+  if (!album) return;
+  state.editingAlbumId = id;
+  document.getElementById('albumModalTitle').textContent = 'Rename Album';
+  document.getElementById('albumNameInput').value = album.name;
+  document.getElementById('albumDescInput').value = album.desc || '';
+  openModal('albumModal');
+  setTimeout(() => document.getElementById('albumNameInput').focus(), 100);
+}
+
+function saveAlbum() {
+  const name = document.getElementById('albumNameInput').value.trim();
+  const desc = document.getElementById('albumDescInput').value.trim();
+  if (!name) { document.getElementById('albumNameInput').focus(); return; }
+
+  if (state.editingAlbumId) {
+    const album = state.albums.find(a => a.id === state.editingAlbumId);
+    if (album) { album.name = name; album.desc = desc; }
+    toast('Album updated');
+  } else {
+    const album = {
+      id: 'al_' + Date.now(),
+      name,
+      desc,
+      createdAt: new Date().toISOString(),
+    };
+    state.albums.push(album);
+    toast(`Album "${name}" created`);
+  }
+
+  closeModal('albumModal');
+  save();
+  render();
+}
+
+function deleteAlbum(id) {
+  const album = state.albums.find(a => a.id === id);
+  if (!album) return;
+  if (!confirm(`Delete album "${album.name}"? Photos won't be deleted.`)) return;
+  state.albums = state.albums.filter(a => a.id !== id);
+  state.photos.forEach(p => { p.albumIds = p.albumIds.filter(aid => aid !== id); });
+  if (state.currentView === id) setView('all');
+  save();
+  render();
+  toast('Album deleted');
+}
+
+// ── Move to album ──
+function openMove(photoId) {
+  state.movingPhotoId = photoId;
+  state.selectedAlbumId = null;
+  const photo = state.photos.find(p => p.id === photoId);
+  const list = document.getElementById('albumListSelect');
+
+  if (state.albums.length === 0) {
+    list.innerHTML = '<p style="color:var(--muted);font-size:0.875rem;text-align:center;padding:20px;">No albums yet. Create one first!</p>';
+  } else {
+    list.innerHTML = state.albums.map(a => {
+      const inAlbum = photo?.albumIds.includes(a.id);
+      return `
+      <div class="album-option ${inAlbum ? 'selected' : ''}" onclick="selectAlbumOption('${a.id}', this)" data-id="${a.id}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        </svg>
+        ${escHtml(a.name)}
+        ${inAlbum ? '<span style="margin-left:auto;font-size:0.75rem;color:var(--accent);">✓ Added</span>' : ''}
+      </div>`;
+    }).join('');
+  }
+
+  openModal('moveModal');
+}
+
+function selectAlbumOption(id, el) {
+  state.selectedAlbumId = id;
+  document.querySelectorAll('.album-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function confirmMove() {
+  if (!state.movingPhotoId || !state.selectedAlbumId) {
+    closeModal('moveModal');
+    return;
+  }
+  const photo = state.photos.find(p => p.id === state.movingPhotoId);
+  if (photo && !photo.albumIds.includes(state.selectedAlbumId)) {
+    photo.albumIds.push(state.selectedAlbumId);
+    const album = state.albums.find(a => a.id === state.selectedAlbumId);
+    toast(`Added to "${album?.name}"`);
+    save();
+    render();
+  }
+  closeModal('moveModal');
+}
+
+// ── Delete photo ──
+function deletePhoto(id) {
+  if (!confirm('Delete this photo permanently?')) return;
+  state.photos = state.photos.filter(p => p.id !== id);
+  try { localStorage.removeItem(`photo_src_${id}`); } catch(e) {}
+  save();
+  render();
+  toast('Photo deleted');
+}
+
+// ── Lightbox ──
+function openLightbox(idx) {
+  const photos = getViewPhotos();
+  state.lightboxIndex = idx;
+  updateLightbox(photos);
+  document.getElementById('lightbox').classList.add('open');
+}
+
+function updateLightbox(photos) {
+  photos = photos || getViewPhotos();
+  const p = photos[state.lightboxIndex];
+  if (!p) return;
+  document.getElementById('lightboxImg').src = p.src;
+  document.getElementById('lightboxImg').alt = p.name;
+  document.getElementById('lightboxInfo').textContent = `${p.name}  ·  ${state.lightboxIndex + 1} / ${photos.length}`;
+}
+
+function lightboxNav(dir) {
+  const photos = getViewPhotos();
+  state.lightboxIndex = (state.lightboxIndex + dir + photos.length) % photos.length;
+  updateLightbox(photos);
+}
+
+function closeLightbox(e) {
+  if (e.target === document.getElementById('lightbox')) closeLightboxDirect();
+}
+function closeLightboxDirect() {
+  document.getElementById('lightbox').classList.remove('open');
+}
+
+// Keyboard nav
+document.addEventListener('keydown', e => {
+  if (document.getElementById('lightbox').classList.contains('open')) {
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+    if (e.key === 'Escape') closeLightboxDirect();
+  }
+  if (e.key === 'Escape') {
+    closeModal('albumModal');
+    closeModal('moveModal');
+  }
+});
+
+// ── Modal helpers ──
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
+
+// ── Toast ──
+function toast(msg) {
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  document.getElementById('toastContainer').appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ── Utils ──
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Init ──
+load();
+render();
+</script>
+</body>
+</html>
