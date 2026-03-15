@@ -8,17 +8,21 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #fafaf8;
-      --surface: #ffffff;
-      --border: #ebebeb;
-      --text: #2a2a2a;
-      --muted: #9a9a9a;
-      --accent: #c8a97e;
-      --accent-light: #f5efe6;
-      --danger: #e07070;
-      --shadow: 0 2px 12px rgba(0,0,0,0.06);
-      --shadow-hover: 0 6px 24px rgba(0,0,0,0.10);
-      --radius: 12px;
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --strip: #1c1c1c;
+      --border: #2a2a2a;
+      --text: #2dd4bf;
+      --text-bright: #5eead4;
+      --muted: #4a9e94;
+      --accent: #0d9488;
+      --accent-light: #134e4a;
+      --danger: #f87171;
+      --perf: #000000;
+      --frame-border: #333;
+      --shadow: 0 4px 20px rgba(0,0,0,0.5);
+      --shadow-hover: 0 8px 32px rgba(0,0,0,0.7);
+      --radius: 4px;
       --font: 'Segoe UI', system-ui, sans-serif;
     }
 
@@ -47,15 +51,27 @@
 
     .logo {
       font-size: 1.15rem;
-      font-weight: 600;
-      letter-spacing: -0.3px;
-      color: var(--text);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-bright);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
-    .logo svg { opacity: 0.7; }
+    .logo-film {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+    .logo-perf {
+      width: 8px;
+      height: 6px;
+      background: var(--accent);
+      border-radius: 1px;
+    }
 
     .header-actions { display: flex; gap: 10px; }
 
@@ -65,41 +81,43 @@
       align-items: center;
       gap: 6px;
       padding: 8px 18px;
-      border-radius: 8px;
+      border-radius: 4px;
       border: none;
       font-family: var(--font);
       font-size: 0.875rem;
-      font-weight: 500;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       cursor: pointer;
       transition: all 0.15s;
       white-space: nowrap;
     }
 
     .btn-primary {
-      background: var(--text);
+      background: var(--accent);
       color: #fff;
     }
-    .btn-primary:hover { background: #444; }
+    .btn-primary:hover { background: #0f766e; }
 
     .btn-outline {
       background: transparent;
       color: var(--text);
-      border: 1px solid var(--border);
+      border: 1px solid var(--accent);
     }
-    .btn-outline:hover { background: var(--bg); border-color: #ccc; }
+    .btn-outline:hover { background: var(--accent-light); }
 
     .btn-ghost {
       background: transparent;
       color: var(--muted);
       padding: 6px 10px;
     }
-    .btn-ghost:hover { background: var(--bg); color: var(--text); }
+    .btn-ghost:hover { background: var(--surface); color: var(--text); }
 
     .btn-danger {
       background: var(--danger);
       color: #fff;
     }
-    .btn-danger:hover { background: #c85c5c; }
+    .btn-danger:hover { background: #ef4444; }
 
     /* ── Layout ── */
     .layout {
@@ -120,9 +138,9 @@
     }
 
     .sidebar-section-title {
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--muted);
       padding: 0 20px 10px;
@@ -133,19 +151,19 @@
       align-items: center;
       gap: 10px;
       padding: 9px 20px;
-      font-size: 0.9rem;
-      color: var(--text);
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
       cursor: pointer;
       transition: background 0.12s;
-      border-radius: 0;
       position: relative;
       user-select: none;
+      letter-spacing: 0.02em;
     }
-    .nav-item:hover { background: var(--bg); }
+    .nav-item:hover { background: rgba(45,212,191,0.05); color: var(--text); }
     .nav-item.active {
       background: var(--accent-light);
-      color: #7a5c35;
-      font-weight: 500;
+      color: var(--text-bright);
     }
     .nav-item.active::before {
       content: '';
@@ -158,11 +176,12 @@
 
     .nav-item .count {
       margin-left: auto;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--muted);
       background: var(--bg);
       padding: 1px 7px;
       border-radius: 10px;
+      font-variant-numeric: tabular-nums;
     }
 
     .nav-album-actions {
@@ -178,12 +197,12 @@
       border: none;
       cursor: pointer;
       padding: 2px 4px;
-      border-radius: 4px;
+      border-radius: 3px;
       color: var(--muted);
       font-size: 0.8rem;
       line-height: 1;
     }
-    .icon-btn:hover { background: rgba(0,0,0,0.08); color: var(--text); }
+    .icon-btn:hover { background: rgba(45,212,191,0.15); color: var(--text); }
 
     .sidebar-divider {
       border: none;
@@ -191,15 +210,14 @@
       margin: 16px 20px;
     }
 
-    .sidebar-add-album {
-      padding: 0 20px;
-    }
+    .sidebar-add-album { padding: 0 20px; }
 
     /* ── Main ── */
     main {
       flex: 1;
       overflow-y: auto;
       padding: 32px;
+      background: var(--bg);
     }
 
     .page-header {
@@ -210,106 +228,183 @@
     }
 
     .page-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      letter-spacing: -0.3px;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-bright);
     }
 
     .page-subtitle {
-      font-size: 0.875rem;
+      font-size: 0.8rem;
       color: var(--muted);
-      margin-top: 3px;
+      margin-top: 4px;
+      letter-spacing: 0.03em;
     }
 
     /* ── Upload zone ── */
     .upload-zone {
       border: 2px dashed var(--border);
       border-radius: var(--radius);
-      padding: 40px;
+      padding: 36px;
       text-align: center;
       color: var(--muted);
       transition: all 0.2s;
       cursor: pointer;
       margin-bottom: 32px;
       background: var(--surface);
+      position: relative;
+      overflow: hidden;
     }
+
+    /* film holes decoration on upload zone */
+    .upload-zone::before,
+    .upload-zone::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 24px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 6px,
+        #000 6px,
+        #000 18px,
+        transparent 18px,
+        transparent 24px
+      );
+      background-size: 100% 24px;
+    }
+    .upload-zone::before { left: 0; }
+    .upload-zone::after { right: 0; }
+
     .upload-zone:hover,
     .upload-zone.drag-over {
       border-color: var(--accent);
-      background: var(--accent-light);
-      color: #7a5c35;
+      background: rgba(13,148,136,0.08);
+      color: var(--text);
     }
     .upload-zone svg { margin-bottom: 10px; opacity: 0.5; }
-    .upload-zone p { font-size: 0.9rem; }
-    .upload-zone span { font-size: 0.8rem; opacity: 0.7; }
+    .upload-zone p { font-size: 0.9rem; font-weight: 500; letter-spacing: 0.03em; }
+    .upload-zone span { font-size: 0.75rem; opacity: 0.6; letter-spacing: 0.05em; text-transform: uppercase; }
 
-    /* ── Photo grid ── */
-    .photo-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
+    /* ── Film Strips ── */
+    .film-strips-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
     }
 
-    .photo-card {
-      background: var(--surface);
-      border-radius: var(--radius);
+    .film-strip {
+      background: var(--strip);
+      border-radius: 3px;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: all 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .film-perforations {
+      display: flex;
+      align-items: center;
+      padding: 5px 6px;
+      background: #111;
+      gap: 6px;
+      overflow: hidden;
+    }
+
+    .perf {
+      flex-shrink: 0;
+      width: 16px;
+      height: 11px;
+      background: var(--perf);
+      border-radius: 2px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .film-strip-photos {
+      display: flex;
+      gap: 3px;
+      padding: 3px 6px;
+      background: var(--strip);
+      overflow-x: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) transparent;
+    }
+
+    .film-frame {
+      flex-shrink: 0;
+      width: 180px;
+      aspect-ratio: 4/3;
+      background: #000;
+      border: 2px solid var(--frame-border);
+      overflow: hidden;
       cursor: pointer;
       position: relative;
-    }
-    .photo-card:hover {
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-2px);
+      transition: border-color 0.2s;
     }
 
-    .photo-card img {
+    .film-frame:hover {
+      border-color: var(--accent);
+    }
+
+    .film-frame img {
       width: 100%;
-      aspect-ratio: 1;
+      height: 100%;
       object-fit: cover;
       display: block;
+      transition: transform 0.3s, filter 0.3s;
+      filter: sepia(10%) contrast(1.05);
     }
 
-    .photo-card-footer {
-      padding: 10px 12px;
+    .film-frame:hover img {
+      transform: scale(1.06);
+      filter: sepia(0%) contrast(1.1);
     }
 
-    .photo-name {
-      font-size: 0.8rem;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+    .film-frame-number {
+      position: absolute;
+      bottom: 4px;
+      left: 6px;
+      font-size: 0.6rem;
+      color: rgba(45,212,191,0.6);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.05em;
+      pointer-events: none;
     }
 
-    .photo-card-overlay {
+    .film-frame-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(0,0,0,0.45);
+      background: rgba(0,0,0,0.6);
       opacity: 0;
       transition: opacity 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      border-radius: var(--radius);
+      gap: 6px;
     }
-    .photo-card:hover .photo-card-overlay { opacity: 1; }
+    .film-frame:hover .film-frame-overlay { opacity: 1; }
 
     .overlay-btn {
-      background: rgba(255,255,255,0.92);
-      border: none;
-      border-radius: 8px;
-      padding: 7px 12px;
-      font-size: 0.78rem;
-      font-weight: 500;
+      background: rgba(45,212,191,0.15);
+      border: 1px solid rgba(45,212,191,0.5);
+      border-radius: 3px;
+      padding: 5px 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       cursor: pointer;
-      color: var(--text);
+      color: var(--text-bright);
       transition: background 0.15s;
     }
-    .overlay-btn:hover { background: #fff; }
-    .overlay-btn.danger { color: var(--danger); }
+    .overlay-btn:hover { background: rgba(45,212,191,0.3); }
+    .overlay-btn.danger {
+      color: var(--danger);
+      border-color: rgba(248,113,113,0.5);
+      background: rgba(248,113,113,0.1);
+    }
+    .overlay-btn.danger:hover { background: rgba(248,113,113,0.25); }
 
     /* ── Empty state ── */
     .empty-state {
@@ -317,16 +412,16 @@
       padding: 80px 20px;
       color: var(--muted);
     }
-    .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
-    .empty-state h3 { font-size: 1rem; font-weight: 500; margin-bottom: 6px; color: var(--text); }
+    .empty-state svg { opacity: 0.2; margin-bottom: 16px; }
+    .empty-state h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); letter-spacing: 0.04em; text-transform: uppercase; }
     .empty-state p { font-size: 0.875rem; }
 
     /* ── Modals ── */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(3px);
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(4px);
       z-index: 200;
       display: flex;
       align-items: center;
@@ -342,37 +437,41 @@
 
     .modal {
       background: var(--surface);
-      border-radius: 16px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
       padding: 32px;
       width: 420px;
       max-width: 95vw;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.6);
       transform: translateY(10px);
       transition: transform 0.2s;
     }
     .modal-backdrop.open .modal { transform: translateY(0); }
 
     .modal-title {
-      font-size: 1.1rem;
-      font-weight: 600;
+      font-size: 1rem;
+      font-weight: 700;
       margin-bottom: 20px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--text-bright);
     }
 
     .form-group { margin-bottom: 16px; }
     .form-label {
       display: block;
-      font-size: 0.8rem;
-      font-weight: 500;
+      font-size: 0.7rem;
+      font-weight: 700;
       margin-bottom: 6px;
       color: var(--muted);
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.08em;
     }
     .form-input {
       width: 100%;
       padding: 10px 14px;
       border: 1px solid var(--border);
-      border-radius: 8px;
+      border-radius: 4px;
       font-family: var(--font);
       font-size: 0.9rem;
       color: var(--text);
@@ -381,6 +480,7 @@
       outline: none;
     }
     .form-input:focus { border-color: var(--accent); }
+    .form-input::placeholder { color: #3a6e6b; }
 
     .form-actions {
       display: flex;
@@ -393,7 +493,7 @@
     .lightbox-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.88);
+      background: rgba(0,0,0,0.95);
       z-index: 300;
       display: flex;
       align-items: center;
@@ -407,24 +507,47 @@
       pointer-events: all;
     }
 
+    /* filmstrip strip along top of lightbox */
+    .lightbox-filmstrip-top {
+      position: fixed;
+      top: 0;
+      left: 0; right: 0;
+      height: 14px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 8px;
+      overflow: hidden;
+    }
+
+    .lightbox-perf {
+      flex-shrink: 0;
+      width: 14px;
+      height: 8px;
+      background: #000;
+      border: 1px solid #222;
+      border-radius: 1px;
+    }
+
     .lightbox-img {
-      max-width: 90vw;
-      max-height: 85vh;
-      border-radius: 8px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+      max-width: 88vw;
+      max-height: 80vh;
+      border-radius: 2px;
+      box-shadow: 0 0 0 2px var(--frame-border), 0 30px 80px rgba(0,0,0,0.8);
       object-fit: contain;
     }
 
     .lightbox-close {
       position: fixed;
-      top: 20px;
+      top: 22px;
       right: 24px;
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: #fff;
-      font-size: 1.4rem;
-      width: 40px;
-      height: 40px;
+      background: rgba(45,212,191,0.1);
+      border: 1px solid rgba(45,212,191,0.3);
+      color: var(--text);
+      font-size: 1.2rem;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
       cursor: pointer;
       display: flex;
@@ -432,29 +555,31 @@
       justify-content: center;
       transition: background 0.15s;
     }
-    .lightbox-close:hover { background: rgba(255,255,255,0.25); }
+    .lightbox-close:hover { background: rgba(45,212,191,0.25); }
 
     .lightbox-info {
       position: fixed;
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.85);
+      background: rgba(45,212,191,0.08);
+      color: var(--text);
       padding: 8px 20px;
       border-radius: 20px;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      border: 1px solid rgba(45,212,191,0.2);
       backdrop-filter: blur(6px);
       text-align: center;
+      letter-spacing: 0.04em;
     }
 
     .lightbox-nav {
       position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(255,255,255,0.12);
-      border: none;
-      color: #fff;
+      background: rgba(45,212,191,0.08);
+      border: 1px solid rgba(45,212,191,0.25);
+      color: var(--text);
       width: 44px;
       height: 44px;
       border-radius: 50%;
@@ -465,7 +590,7 @@
       justify-content: center;
       transition: background 0.15s;
     }
-    .lightbox-nav:hover { background: rgba(255,255,255,0.22); }
+    .lightbox-nav:hover { background: rgba(45,212,191,0.2); }
     .lightbox-prev { left: 20px; }
     .lightbox-next { right: 20px; }
 
@@ -483,14 +608,15 @@
       align-items: center;
       gap: 12px;
       padding: 10px 14px;
-      border-radius: 8px;
+      border-radius: 4px;
       border: 1px solid var(--border);
       cursor: pointer;
       transition: all 0.15s;
-      font-size: 0.9rem;
+      font-size: 0.875rem;
+      color: var(--muted);
     }
-    .album-option:hover { border-color: var(--accent); background: var(--accent-light); }
-    .album-option.selected { border-color: var(--accent); background: var(--accent-light); font-weight: 500; }
+    .album-option:hover { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
+    .album-option.selected { border-color: var(--accent); background: var(--accent-light); color: var(--text-bright); font-weight: 600; }
 
     /* ── Toast ── */
     .toast-container {
@@ -504,11 +630,14 @@
     }
 
     .toast {
-      background: var(--text);
+      background: var(--accent);
       color: #fff;
       padding: 10px 18px;
-      border-radius: 8px;
-      font-size: 0.875rem;
+      border-radius: 4px;
+      font-size: 0.825rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
       box-shadow: var(--shadow-hover);
       animation: slideIn 0.2s ease;
     }
@@ -521,8 +650,8 @@
     /* ── Responsive ── */
     @media (max-width: 640px) {
       aside { display: none; }
-      main { padding: 20px 16px; }
-      .photo-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; }
+      main { padding: 20px 12px; }
+      .film-frame { width: 130px; }
     }
   </style>
 </head>
@@ -531,12 +660,17 @@
 <!-- Header -->
 <header>
   <div class="logo">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7">
-      <rect x="3" y="3" width="18" height="18" rx="3"/>
-      <circle cx="8.5" cy="8.5" r="1.5"/>
-      <path d="M21 15l-5-5L5 21"/>
-    </svg>
+    <div class="logo-film">
+      <div class="logo-perf"></div>
+      <div class="logo-perf"></div>
+      <div class="logo-perf"></div>
+    </div>
     My Gallery
+    <div class="logo-film">
+      <div class="logo-perf"></div>
+      <div class="logo-perf"></div>
+      <div class="logo-perf"></div>
+    </div>
   </div>
   <div class="header-actions">
     <button class="btn btn-outline" onclick="openAlbumModal()">+ New Album</button>
@@ -551,7 +685,7 @@
   <aside>
     <div class="sidebar-section-title">Library</div>
     <div class="nav-item active" data-view="all" onclick="setView('all')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
         <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
       </svg>
@@ -564,8 +698,8 @@
     <div id="album-nav"></div>
 
     <div class="sidebar-add-album" style="margin-top:8px;">
-      <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;gap:8px;font-size:0.85rem;" onclick="openAlbumModal()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;gap:8px;font-size:0.8rem;" onclick="openAlbumModal()">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
           <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
         </svg>
         New Album
@@ -588,7 +722,7 @@
          ondragover="onDragOver(event)"
          ondragleave="onDragLeave(event)"
          ondrop="onDrop(event)">
-      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" display="block" style="margin:0 auto 10px;">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" display="block" style="margin:0 auto 10px;">
         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
       </svg>
@@ -596,15 +730,14 @@
       <span>Supports JPG, PNG, GIF, WEBP</span>
     </div>
 
-    <!-- Photo Grid -->
-    <div class="photo-grid" id="photoGrid"></div>
+    <!-- Film Strips -->
+    <div class="film-strips-container" id="photoGrid"></div>
 
     <!-- Empty State -->
     <div class="empty-state" id="emptyState" style="display:none;">
       <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" display="block" style="margin:0 auto 16px;">
-        <rect x="3" y="3" width="18" height="18" rx="3"/>
-        <circle cx="8.5" cy="8.5" r="1.5"/>
-        <path d="M21 15l-5-5L5 21"/>
+        <rect x="2" y="8" width="20" height="12" rx="2"/>
+        <path d="M2 10h20M6 8V6M10 8V6M14 8V6M18 8V6"/>
       </svg>
       <h3 id="empty-title">No photos yet</h3>
       <p id="empty-desc">Upload some photos to get started</p>
@@ -645,6 +778,7 @@
 
 <!-- Lightbox -->
 <div class="lightbox-backdrop" id="lightbox" onclick="closeLightbox(event)">
+  <div class="lightbox-filmstrip-top" id="lightboxFilmstripTop"></div>
   <button class="lightbox-close" onclick="closeLightboxDirect()">✕</button>
   <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&#8592;</button>
   <img class="lightbox-img" id="lightboxImg" src="" alt="" />
@@ -668,15 +802,14 @@ let state = {
 };
 
 const STORAGE_KEY = 'photoGallery_v1';
+const STRIP_SIZE = 5;
 
 function save() {
-  // Only store metadata, not image data (images stored separately)
   const data = {
     photos: state.photos.map(p => ({ id: p.id, name: p.name, albumIds: p.albumIds, uploadedAt: p.uploadedAt })),
     albums: state.albums,
   };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  // Store images separately
   state.photos.forEach(p => {
     try { localStorage.setItem(`photo_src_${p.id}`, p.src); } catch(e) {}
   });
@@ -708,7 +841,7 @@ function renderAlbumNav() {
     const count = state.photos.filter(p => p.albumIds.includes(a.id)).length;
     return `
     <div class="nav-item ${state.currentView === a.id ? 'active' : ''}" onclick="setView('${a.id}')">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
       </svg>
       <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(a.name)}</span>
@@ -730,13 +863,17 @@ function getViewPhotos() {
   return state.photos.filter(p => p.albumIds.includes(state.currentView));
 }
 
+function makePerforations(count) {
+  return Array(count).fill('<div class="perf"></div>').join('');
+}
+
 function renderGrid() {
   const photos = getViewPhotos();
-  const grid = document.getElementById('photoGrid');
+  const container = document.getElementById('photoGrid');
   const empty = document.getElementById('emptyState');
 
   if (photos.length === 0) {
-    grid.innerHTML = '';
+    container.innerHTML = '';
     empty.style.display = 'block';
     if (state.currentView === 'all') {
       document.getElementById('empty-title').textContent = 'No photos yet';
@@ -750,18 +887,42 @@ function renderGrid() {
   }
 
   empty.style.display = 'none';
-  grid.innerHTML = photos.map((p, idx) => `
-    <div class="photo-card" onclick="openLightbox(${idx})">
-      <img src="${p.src}" alt="${escHtml(p.name)}" loading="lazy" />
-      <div class="photo-card-footer">
-        <div class="photo-name">${escHtml(p.name)}</div>
+
+  // Group into filmstrips
+  const strips = [];
+  for (let i = 0; i < photos.length; i += STRIP_SIZE) {
+    strips.push(photos.slice(i, i + STRIP_SIZE));
+  }
+
+  const perfCount = 30;
+  const perfs = makePerforations(perfCount);
+
+  container.innerHTML = strips.map((strip, si) => `
+    <div class="film-strip">
+      <div class="film-perforations">${perfs}</div>
+      <div class="film-strip-photos">
+        ${strip.map((p, fi) => {
+          const globalIdx = si * STRIP_SIZE + fi;
+          return `
+          <div class="film-frame" onclick="openLightbox(${globalIdx})">
+            <img src="${p.src}" alt="${escHtml(p.name)}" loading="lazy" />
+            <div class="film-frame-number">${String(globalIdx + 1).padStart(2,'0')}</div>
+            <div class="film-frame-overlay">
+              <button class="overlay-btn" onclick="event.stopPropagation();openMove('${p.id}')">+ Album</button>
+              <button class="overlay-btn danger" onclick="event.stopPropagation();deletePhoto('${p.id}')">Delete</button>
+            </div>
+          </div>`;
+        }).join('')}
       </div>
-      <div class="photo-card-overlay">
-        <button class="overlay-btn" onclick="event.stopPropagation();openMove('${p.id}')">+ Album</button>
-        <button class="overlay-btn danger" onclick="event.stopPropagation();deletePhoto('${p.id}')">Delete</button>
-      </div>
+      <div class="film-perforations">${perfs}</div>
     </div>
   `).join('');
+}
+
+// ── Lightbox filmstrip ──
+function initLightboxFilmstrip() {
+  const top = document.getElementById('lightboxFilmstripTop');
+  top.innerHTML = makePerforations(60);
 }
 
 // ── View ──
@@ -903,11 +1064,11 @@ function openMove(photoId) {
       const inAlbum = photo?.albumIds.includes(a.id);
       return `
       <div class="album-option ${inAlbum ? 'selected' : ''}" onclick="selectAlbumOption('${a.id}', this)" data-id="${a.id}">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
           <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
         </svg>
         ${escHtml(a.name)}
-        ${inAlbum ? '<span style="margin-left:auto;font-size:0.75rem;color:var(--accent);">✓ Added</span>' : ''}
+        ${inAlbum ? '<span style="margin-left:auto;font-size:0.72rem;color:var(--accent);font-weight:700;">✓ Added</span>' : ''}
       </div>`;
     }).join('');
   }
@@ -961,7 +1122,8 @@ function updateLightbox(photos) {
   if (!p) return;
   document.getElementById('lightboxImg').src = p.src;
   document.getElementById('lightboxImg').alt = p.name;
-  document.getElementById('lightboxInfo').textContent = `${p.name}  ·  ${state.lightboxIndex + 1} / ${photos.length}`;
+  document.getElementById('lightboxInfo').textContent =
+    `${p.name}  ·  ${String(state.lightboxIndex + 1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
 }
 
 function lightboxNav(dir) {
@@ -1011,6 +1173,7 @@ function escHtml(s) {
 
 // ── Init ──
 load();
+initLightboxFilmstrip();
 render();
 </script>
 </body>
