@@ -1,1 +1,122 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>brenda ponce — a personal archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Jost:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: #1a1a1a;
+      color: #f0ebe4;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    #hero {
+      position: fixed;
+      inset: 0;
+      background-size: cover;
+      background-position: center;
+      transition: opacity 0.8s ease;
+    }
+
+    #hero::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        transparent 40%,
+        rgba(0,0,0,0.25) 70%,
+        rgba(0,0,0,0.55) 100%
+      );
+    }
+
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 0 2rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      z-index: 10;
+    }
+
+    .site-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 2.6rem;
+      line-height: 1;
+      letter-spacing: -0.01em;
+      color: #f0ebe4;
+      text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+    }
+
+    .site-subtitle {
+      font-family: 'Jost', sans-serif;
+      font-weight: 300;
+      font-size: 0.6rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(240,235,228,0.75);
+      margin-top: 0.3rem;
+    }
+
+    .enter-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      color: #8ec9a8;
+      text-decoration: none;
+      font-weight: 300;
+      margin-top: 0.6rem;
+      transition: color 0.2s;
+    }
+
+    .enter-link:hover { color: #b5dfc6; }
+
+    .meta-info {
+      text-align: right;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      color: rgba(240,235,228,0.55);
+      font-weight: 300;
+    }
+  </style>
+</head>
+<body>
+  <div id="hero"></div>
+
+  <div class="bottom-bar">
+    <div>
+      <div class="site-title">mémoire</div>
+      <div class="site-subtitle">A Personal Archive</div>
+      <a class="enter-link" href="archive.html">enter the archive &nbsp;→</a>
+    </div>
+    <div class="meta-info" id="meta-info"></div>
+  </div>
+
+  <script src="photos.js"></script>
+  <script>
+    const allPhotos = ROLLS.flatMap(r => r.frames);
+    const random = allPhotos[Math.floor(Math.random() * allPhotos.length)];
+    document.getElementById('hero').style.backgroundImage = `url('${random.src}')`;
+
+    const totalFrames = allPhotos.length;
+    const totalRolls = ROLLS.length;
+    document.getElementById('meta-info').textContent =
+      `${totalFrames} frame${totalFrames !== 1 ? 's' : ''} · ${totalRolls} roll${totalRolls !== 1 ? 's' : ''}`;
+  </script>
+</body>
+</html>
