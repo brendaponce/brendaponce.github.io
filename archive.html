@@ -11,18 +11,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f4efe9;
-      --sidebar-bg: #ede8e2;
-      --border: #ddd8d1;
-      --text: #1c1c1c;
-      --text-muted: #888;
-      --accent: #3d7a5c;
-      --accent-hover: #2d5e44;
-      --strip-bg: #e8e2da;
-      --strip-hole: #cbc5bd;
-      --caption: #999;
-      --font-body: 'Jost', sans-serif;
-      --font-serif: 'Cormorant Garamond', serif;
+      --bg:          #faf8f5;
+      --sidebar-bg:  #f5f1ec;
+      --border:      #ece7df;
+      --text:        #2a2622;
+      --text-muted:  #a89f96;
+      --accent:      #7a9e8e;
+      --strip-bg:    #f0ebe3;
+      --strip-hole:  #ddd5ca;
+      --caption:     #b8b0a7;
+      --font-body:   'Jost', sans-serif;
+      --font-serif:  'Cormorant Garamond', serif;
     }
 
     html, body {
@@ -31,9 +30,21 @@
       background: var(--bg);
       color: var(--text);
       font-size: 14px;
+      -webkit-font-smoothing: antialiased;
     }
 
     a { color: inherit; text-decoration: none; }
+
+    /* ── Fade-in for roll sections ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .roll-section {
+      opacity: 0;
+      animation: fadeUp 0.55s ease forwards;
+    }
 
     /* ── Layout ── */
     .app {
@@ -44,13 +55,13 @@
 
     /* ── Sidebar ── */
     .sidebar {
-      width: 180px;
-      min-width: 180px;
+      width: 190px;
+      min-width: 190px;
       background: var(--sidebar-bg);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
-      padding: 1.2rem 0 1rem;
+      padding: 1.5rem 0 1rem;
       overflow-y: auto;
     }
 
@@ -58,20 +69,21 @@
       font-family: var(--font-serif);
       font-style: italic;
       font-weight: 300;
-      font-size: 1.15rem;
-      padding: 0 1.1rem 1.2rem;
+      font-size: 1.2rem;
+      padding: 0 1.3rem 1.5rem;
       color: var(--text);
       letter-spacing: -0.01em;
     }
 
+    .sidebar-logo a { transition: color 0.2s; }
     .sidebar-logo a:hover { color: var(--accent); }
 
     .sidebar-section-label {
-      font-size: 0.6rem;
-      letter-spacing: 0.15em;
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--text-muted);
-      padding: 0 1.1rem 0.4rem;
+      padding: 0 1.3rem 0.5rem;
       font-weight: 400;
     }
 
@@ -79,33 +91,34 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.3rem 1.1rem;
-      font-size: 0.8rem;
+      padding: 0.35rem 1.3rem;
+      font-size: 0.78rem;
       font-weight: 300;
       cursor: pointer;
-      border-radius: 0;
-      transition: background 0.15s;
+      transition: background 0.2s;
       gap: 0.4rem;
+      letter-spacing: 0.01em;
     }
 
-    .sidebar-item:hover { background: rgba(0,0,0,0.04); }
-    .sidebar-item.active { background: rgba(0,0,0,0.06); }
+    .sidebar-item:hover { background: rgba(0,0,0,0.03); }
+    .sidebar-item.active { background: rgba(0,0,0,0.05); }
 
     .sidebar-item-left {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
     }
 
     .roll-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       flex-shrink: 0;
+      opacity: 0.75;
     }
 
     .sidebar-count {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 300;
     }
@@ -113,7 +126,7 @@
     .sidebar-divider {
       height: 1px;
       background: var(--border);
-      margin: 0.8rem 0;
+      margin: 1rem 0 0.6rem;
     }
 
     .sidebar-spacer { flex: 1; }
@@ -122,119 +135,117 @@
     .main {
       flex: 1;
       overflow-y: auto;
-      padding: 1.8rem 2rem 3rem;
+      padding: 2.2rem 2.5rem 4rem;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
     }
+
+    .main::-webkit-scrollbar { width: 4px; }
+    .main::-webkit-scrollbar-track { background: transparent; }
+    .main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
 
     /* ── Top header ── */
     .main-header {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 1.8rem;
+      margin-bottom: 2.5rem;
     }
 
     .main-title {
       font-family: var(--font-serif);
       font-weight: 300;
-      font-size: 1.8rem;
+      font-size: 1.9rem;
       letter-spacing: -0.01em;
+      color: var(--text);
     }
 
     .main-subtitle {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       color: var(--text-muted);
       font-weight: 300;
-      margin-top: 0.2rem;
+      margin-top: 0.3rem;
+      letter-spacing: 0.03em;
     }
 
     .view-toggle {
       display: flex;
-      gap: 0.3rem;
+      gap: 0.25rem;
       align-items: center;
     }
 
     .view-btn {
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-family: var(--font-body);
       font-weight: 300;
-      letter-spacing: 0.03em;
-      padding: 0.3rem 0.7rem;
+      letter-spacing: 0.04em;
+      padding: 0.28rem 0.75rem;
       border-radius: 999px;
       border: 1px solid var(--border);
       background: transparent;
       cursor: pointer;
       color: var(--text-muted);
-      transition: all 0.15s;
+      transition: all 0.2s ease;
     }
 
     .view-btn.active {
       background: var(--text);
-      color: #fff;
+      color: var(--bg);
       border-color: var(--text);
     }
 
     .view-btn:hover:not(.active) {
-      background: rgba(0,0,0,0.05);
+      border-color: var(--text-muted);
       color: var(--text);
     }
 
     /* ── Roll sections ── */
     .roll-section {
-      margin-bottom: 3rem;
+      margin-bottom: 3.5rem;
     }
 
     .roll-header {
       display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 0.6rem;
+      align-items: baseline;
+      gap: 0.7rem;
+      margin-bottom: 0.8rem;
     }
 
     .roll-name {
       font-family: var(--font-serif);
       font-style: italic;
       font-weight: 300;
-      font-size: 1.3rem;
+      font-size: 1.35rem;
       letter-spacing: -0.01em;
+      color: var(--text);
     }
 
     .roll-frame-count {
-      font-size: 0.65rem;
+      font-size: 0.63rem;
       color: var(--text-muted);
       font-weight: 300;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
     }
 
-    /* ── Film Strip (strips view) ── */
+    /* ── Film Strip ── */
     .film-strip-wrapper {
       overflow-x: auto;
       overflow-y: hidden;
-      /* custom scrollbar */
       scrollbar-width: thin;
       scrollbar-color: var(--strip-hole) transparent;
-      padding-bottom: 0.25rem;
+      padding-bottom: 0.5rem;
     }
 
-    .film-strip-wrapper::-webkit-scrollbar { height: 4px; }
+    .film-strip-wrapper::-webkit-scrollbar { height: 3px; }
     .film-strip-wrapper::-webkit-scrollbar-track { background: transparent; }
     .film-strip-wrapper::-webkit-scrollbar-thumb { background: var(--strip-hole); border-radius: 2px; }
 
     .film-strip {
       display: flex;
-      gap: 0;
-      background: var(--strip-bg);
-      padding: 0;
       width: max-content;
-    }
-
-    /* sprocket rail */
-    .sprocket-rail {
-      height: 22px;
       background: var(--strip-bg);
-      display: flex;
-      align-items: center;
-      padding: 0 8px;
-      gap: 0;
+      /* very soft shadow so the strip floats slightly off the page */
+      box-shadow: 0 2px 16px rgba(0,0,0,0.055);
     }
 
     .film-frame {
@@ -244,70 +255,73 @@
       flex-shrink: 0;
     }
 
+    .film-frame + .film-frame {
+      border-left: 1px solid rgba(0,0,0,0.06);
+    }
+
+    /* sprocket row — very delicate */
     .sprocket-row {
-      height: 22px;
+      height: 18px;
       background: var(--strip-bg);
       display: flex;
       align-items: center;
-      padding: 0 10px;
-      gap: 18px;
+      padding: 0 12px;
+      gap: 16px;
     }
 
     .sprocket-hole {
-      width: 10px;
-      height: 8px;
+      width: 8px;
+      height: 6px;
       background: var(--strip-hole);
       border-radius: 2px;
-      opacity: 0.7;
+      opacity: 0.45;
     }
 
     .frame-img-wrap {
-      position: relative;
       overflow: hidden;
       cursor: zoom-in;
     }
 
     .frame-img-wrap img {
       display: block;
-      height: 300px;
+      height: 280px;
       width: auto;
-      min-width: 200px;
-      max-width: 500px;
+      min-width: 180px;
+      max-width: 480px;
       object-fit: cover;
-      transition: transform 0.3s ease, filter 0.3s ease;
+      transition: transform 0.4s ease;
     }
 
+    /* photos stay original — only gentle scale on hover */
     .frame-img-wrap:hover img {
-      transform: scale(1.02);
-      filter: brightness(1.05);
+      transform: scale(1.015);
     }
 
     .frame-caption {
-      font-size: 0.65rem;
+      font-size: 0.62rem;
       color: var(--caption);
       font-weight: 300;
       text-align: center;
-      padding: 0.3rem 0.5rem 0;
+      padding: 0.35rem 0.6rem 0;
       font-style: italic;
-      min-height: 1.2rem;
-    }
-
-    /* gap between frames inside strip */
-    .film-frame + .film-frame {
-      border-left: 2px solid var(--strip-bg);
+      font-family: var(--font-serif);
+      min-height: 1.3rem;
+      letter-spacing: 0.02em;
     }
 
     /* ── Sheet view ── */
     .sheet-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 0.8rem;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.1rem;
     }
 
     .sheet-frame {
       aspect-ratio: 3/2;
       overflow: hidden;
       cursor: zoom-in;
+      /* soft shadow — photos rest gently on the page */
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
     }
 
     .sheet-frame img {
@@ -315,32 +329,39 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s ease;
+      transition: transform 0.4s ease;
     }
 
-    .sheet-frame:hover img { transform: scale(1.03); }
+    .sheet-frame:hover img { transform: scale(1.02); }
 
     /* ── Lightbox ── */
     .lightbox {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.92);
+      /* soft blur backdrop instead of harsh black */
+      background: rgba(18, 16, 14, 0.88);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 100;
       align-items: center;
       justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s ease;
     }
 
-    .lightbox.open { display: flex; }
+    .lightbox.open {
+      display: flex;
+      opacity: 1;
+    }
 
     .lightbox-inner {
-      position: relative;
-      max-width: 90vw;
-      max-height: 90vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.8rem;
+      max-width: 90vw;
+      max-height: 90vh;
     }
 
     .lightbox-inner img {
@@ -348,30 +369,34 @@
       max-height: 82vh;
       object-fit: contain;
       display: block;
+      /* very soft shadow so photo lifts off the backdrop */
+      box-shadow: 0 8px 48px rgba(0,0,0,0.45);
     }
 
     .lightbox-caption {
-      color: rgba(255,255,255,0.55);
-      font-size: 0.75rem;
+      color: rgba(240,235,228,0.45);
+      font-size: 0.78rem;
       font-style: italic;
       font-family: var(--font-serif);
       font-weight: 300;
+      letter-spacing: 0.02em;
     }
 
     .lightbox-close {
       position: fixed;
-      top: 1.2rem;
-      right: 1.5rem;
-      color: rgba(255,255,255,0.6);
-      font-size: 1.5rem;
+      top: 1.4rem;
+      right: 1.8rem;
+      color: rgba(240,235,228,0.4);
+      font-size: 1.4rem;
       cursor: pointer;
       background: none;
       border: none;
       line-height: 1;
       transition: color 0.2s;
+      font-weight: 300;
     }
 
-    .lightbox-close:hover { color: #fff; }
+    .lightbox-close:hover { color: rgba(240,235,228,0.85); }
 
     .lightbox-nav {
       position: fixed;
@@ -379,19 +404,32 @@
       transform: translateY(-50%);
       background: none;
       border: none;
-      color: rgba(255,255,255,0.5);
-      font-size: 1.8rem;
+      color: rgba(240,235,228,0.3);
+      font-size: 2rem;
       cursor: pointer;
-      padding: 1rem;
+      padding: 1.2rem;
       transition: color 0.2s;
       line-height: 1;
+      font-weight: 300;
     }
 
-    .lightbox-nav:hover { color: #fff; }
-    .lightbox-prev { left: 0.5rem; }
-    .lightbox-next { right: 0.5rem; }
+    .lightbox-nav:hover { color: rgba(240,235,228,0.8); }
+    .lightbox-prev { left: 0.2rem; }
+    .lightbox-next { right: 0.2rem; }
 
-    /* hide strips/sheet based on view */
+    /* counter indicator */
+    .lightbox-counter {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: rgba(240,235,228,0.3);
+      font-weight: 300;
+    }
+
+    /* view visibility */
     .app[data-view="sheet"] .film-strip-wrapper { display: none; }
     .app[data-view="strips"] .sheet-grid { display: none; }
   </style>
@@ -399,18 +437,17 @@
 <body>
   <div class="app" data-view="strips" id="app">
 
-    <!-- Sidebar -->
     <aside class="sidebar">
       <div class="sidebar-logo"><a href="index.html">mémoire</a></div>
 
       <div class="sidebar-section-label">Library</div>
-      <div class="sidebar-item active" data-filter="all">
+      <div class="sidebar-item active">
         <span class="sidebar-item-left">all frames</span>
-        <span class="sidebar-count" id="total-frames">0</span>
+        <span class="sidebar-count" id="total-frames">—</span>
       </div>
-      <div class="sidebar-item" data-filter="rolls">
+      <div class="sidebar-item">
         <span class="sidebar-item-left">rolls</span>
-        <span class="sidebar-count" id="total-rolls">0</span>
+        <span class="sidebar-count" id="total-rolls">—</span>
       </div>
 
       <div class="sidebar-divider"></div>
@@ -420,7 +457,6 @@
       <div class="sidebar-spacer"></div>
     </aside>
 
-    <!-- Main -->
     <main class="main">
       <div class="main-header">
         <div>
@@ -446,11 +482,11 @@
       <div class="lightbox-caption" id="lb-caption"></div>
     </div>
     <button class="lightbox-nav lightbox-next" id="lb-next">›</button>
+    <div class="lightbox-counter" id="lb-counter"></div>
   </div>
 
   <script src="photos.js"></script>
   <script>
-    // ── Build UI ──────────────────────────────────────────
     const allFrames = ROLLS.flatMap(r => r.frames.map(f => ({ ...f, roll: r.name })));
     let lbIndex = 0;
 
@@ -460,7 +496,7 @@
     document.getElementById('header-subtitle').textContent =
       `${allFrames.length} exposure${allFrames.length !== 1 ? 's' : ''} · ${ROLLS.length} roll${ROLLS.length !== 1 ? 's' : ''}`;
 
-    // Sidebar roll links
+    // Sidebar roll list
     const sidebarRolls = document.getElementById('sidebar-rolls');
     ROLLS.forEach(roll => {
       const el = document.createElement('div');
@@ -478,40 +514,37 @@
       sidebarRolls.appendChild(el);
     });
 
-    // Roll sections
+    // Build roll sections
     const container = document.getElementById('rolls-container');
 
-    ROLLS.forEach(roll => {
+    ROLLS.forEach((roll, rollIdx) => {
       const section = document.createElement('div');
       section.className = 'roll-section';
       section.id = roll.id;
+      section.style.animationDelay = `${rollIdx * 0.12}s`;
 
-      // Roll header
+      // Header
       const header = document.createElement('div');
       header.className = 'roll-header';
       header.innerHTML = `
-        <span class="roll-dot" style="background:${roll.color}"></span>
+        <span class="roll-dot" style="background:${roll.color};opacity:0.8;width:7px;height:7px;border-radius:50%;display:inline-block;"></span>
         <span class="roll-name">${roll.name}</span>
         <span class="roll-frame-count">${roll.frames.length} frame${roll.frames.length !== 1 ? 's' : ''}</span>
       `;
       section.appendChild(header);
 
-      // Film strip wrapper
+      // Film strip
       const stripWrapper = document.createElement('div');
       stripWrapper.className = 'film-strip-wrapper';
-
       const strip = document.createElement('div');
       strip.className = 'film-strip';
 
-      roll.frames.forEach((frame, fi) => {
+      roll.frames.forEach((frame) => {
         const globalIndex = allFrames.findIndex(f => f.src === frame.src && f.roll === roll.name);
         const filmFrame = document.createElement('div');
         filmFrame.className = 'film-frame';
-
-        // sprockets top
         filmFrame.appendChild(makeSprockets());
 
-        // image
         const imgWrap = document.createElement('div');
         imgWrap.className = 'frame-img-wrap';
         const img = document.createElement('img');
@@ -522,15 +555,12 @@
         imgWrap.addEventListener('click', () => openLightbox(globalIndex));
         filmFrame.appendChild(imgWrap);
 
-        // caption
         const cap = document.createElement('div');
         cap.className = 'frame-caption';
         cap.textContent = frame.caption || '';
         filmFrame.appendChild(cap);
 
-        // sprockets bottom
         filmFrame.appendChild(makeSprockets());
-
         strip.appendChild(filmFrame);
       });
 
@@ -540,7 +570,6 @@
       // Sheet grid
       const grid = document.createElement('div');
       grid.className = 'sheet-grid';
-
       roll.frames.forEach((frame) => {
         const globalIndex = allFrames.findIndex(f => f.src === frame.src && f.roll === roll.name);
         const sf = document.createElement('div');
@@ -569,7 +598,7 @@
       return row;
     }
 
-    // ── View toggle ───────────────────────────────────────
+    // View toggle
     document.querySelectorAll('.view-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
@@ -578,16 +607,20 @@
       });
     });
 
-    // ── Lightbox ──────────────────────────────────────────
+    // Lightbox
     function openLightbox(index) {
       lbIndex = index;
       updateLightbox();
-      document.getElementById('lightbox').classList.add('open');
+      const lb = document.getElementById('lightbox');
+      lb.style.display = 'flex';
+      requestAnimationFrame(() => lb.classList.add('open'));
       document.body.style.overflow = 'hidden';
     }
 
     function closeLightbox() {
-      document.getElementById('lightbox').classList.remove('open');
+      const lb = document.getElementById('lightbox');
+      lb.classList.remove('open');
+      setTimeout(() => { lb.style.display = 'none'; }, 250);
       document.body.style.overflow = '';
     }
 
@@ -595,23 +628,21 @@
       const frame = allFrames[lbIndex];
       document.getElementById('lb-img').src = frame.src;
       document.getElementById('lb-caption').textContent = frame.caption || '';
+      document.getElementById('lb-counter').textContent = `${lbIndex + 1} / ${allFrames.length}`;
     }
 
     document.getElementById('lb-close').addEventListener('click', closeLightbox);
     document.getElementById('lightbox').addEventListener('click', e => {
       if (e.target === document.getElementById('lightbox')) closeLightbox();
     });
-
     document.getElementById('lb-prev').addEventListener('click', () => {
       lbIndex = (lbIndex - 1 + allFrames.length) % allFrames.length;
       updateLightbox();
     });
-
     document.getElementById('lb-next').addEventListener('click', () => {
       lbIndex = (lbIndex + 1) % allFrames.length;
       updateLightbox();
     });
-
     document.addEventListener('keydown', e => {
       if (!document.getElementById('lightbox').classList.contains('open')) return;
       if (e.key === 'Escape') closeLightbox();

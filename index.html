@@ -12,7 +12,7 @@
 
     body {
       font-family: 'Jost', sans-serif;
-      background: #1a1a1a;
+      background: #0e0e0e;
       color: #f0ebe4;
       height: 100vh;
       overflow: hidden;
@@ -23,18 +23,22 @@
       inset: 0;
       background-size: cover;
       background-position: center;
-      transition: opacity 0.8s ease;
+      opacity: 0;
+      transition: opacity 1.2s ease;
     }
 
+    #hero.loaded { opacity: 1; }
+
+    /* very soft gradient — just enough for legibility, not fighting the photo */
     #hero::after {
       content: '';
       position: absolute;
       inset: 0;
       background: linear-gradient(
         to bottom,
-        transparent 40%,
-        rgba(0,0,0,0.25) 70%,
-        rgba(0,0,0,0.55) 100%
+        transparent 50%,
+        rgba(0,0,0,0.12) 75%,
+        rgba(0,0,0,0.38) 100%
       );
     }
 
@@ -43,54 +47,68 @@
       bottom: 0;
       left: 0;
       right: 0;
-      padding: 0 2rem 1.5rem;
+      padding: 0 2.2rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: flex-end;
       z-index: 10;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.9s ease 0.5s, transform 0.9s ease 0.5s;
+    }
+
+    .bottom-bar.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .site-title {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
       font-weight: 300;
-      font-size: 2.6rem;
+      font-size: 2.8rem;
       line-height: 1;
       letter-spacing: -0.01em;
-      color: #f0ebe4;
-      text-shadow: 0 1px 8px rgba(0,0,0,0.3);
+      color: rgba(245, 240, 233, 0.96);
     }
 
     .site-subtitle {
       font-family: 'Jost', sans-serif;
       font-weight: 300;
-      font-size: 0.6rem;
-      letter-spacing: 0.22em;
+      font-size: 0.58rem;
+      letter-spacing: 0.28em;
       text-transform: uppercase;
-      color: rgba(240,235,228,0.75);
-      margin-top: 0.3rem;
+      color: rgba(240,235,228,0.5);
+      margin-top: 0.45rem;
     }
 
     .enter-link {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.75rem;
-      letter-spacing: 0.05em;
-      color: #8ec9a8;
+      gap: 0.5rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      color: rgba(240,235,228,0.7);
       text-decoration: none;
       font-weight: 300;
-      margin-top: 0.6rem;
-      transition: color 0.2s;
+      margin-top: 0.75rem;
+      transition: color 0.3s ease;
     }
 
-    .enter-link:hover { color: #b5dfc6; }
+    .enter-link:hover { color: rgba(240,235,228,1); }
+
+    .enter-link .arrow {
+      display: inline-block;
+      transition: transform 0.3s ease;
+    }
+
+    .enter-link:hover .arrow { transform: translateX(3px); }
 
     .meta-info {
       text-align: right;
-      font-size: 0.65rem;
-      letter-spacing: 0.08em;
-      color: rgba(240,235,228,0.55);
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      color: rgba(240,235,228,0.35);
       font-weight: 300;
     }
   </style>
@@ -98,11 +116,11 @@
 <body>
   <div id="hero"></div>
 
-  <div class="bottom-bar">
+  <div class="bottom-bar" id="bottom-bar">
     <div>
       <div class="site-title">mémoire</div>
       <div class="site-subtitle">A Personal Archive</div>
-      <a class="enter-link" href="archive.html">enter the archive &nbsp;→</a>
+      <a class="enter-link" href="archive.html">enter the archive <span class="arrow">→</span></a>
     </div>
     <div class="meta-info" id="meta-info"></div>
   </div>
@@ -111,7 +129,17 @@
   <script>
     const allPhotos = ROLLS.flatMap(r => r.frames);
     const random = allPhotos[Math.floor(Math.random() * allPhotos.length)];
-    document.getElementById('hero').style.backgroundImage = `url('${random.src}')`;
+
+    const hero = document.getElementById('hero');
+    const img = new Image();
+    img.onload = () => {
+      hero.style.backgroundImage = `url('${random.src}')`;
+      requestAnimationFrame(() => {
+        hero.classList.add('loaded');
+        document.getElementById('bottom-bar').classList.add('visible');
+      });
+    };
+    img.src = random.src;
 
     const totalFrames = allPhotos.length;
     const totalRolls = ROLLS.length;
