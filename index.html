@@ -1,1200 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Photo Gallery</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --bg: #f4f1ec;
-      --surface: #ffffff;
-      --strip: #ede9e1;
-      --border: #e0dbd1;
-      --text: #0d9488;
-      --text-bright: #0f766e;
-      --muted: #5eada7;
-      --accent: #14b8a6;
-      --accent-light: #f0fdfb;
-      --danger: #ef4444;
-      --perf: #c9c3b8;
-      --frame-border: #d9d4cb;
-      --shadow: 0 2px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.08);
-      --shadow-hover: 0 8px 28px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-      --radius: 8px;
-      --font: 'Segoe UI', system-ui, sans-serif;
-    }
-
-    body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── Header ── */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .logo {
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-bright);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .logo-film {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-    }
-
-    .logo-perf {
-      width: 7px;
-      height: 5px;
-      background: var(--accent);
-      border-radius: 2px;
-      opacity: 0.7;
-    }
-
-    .header-actions { display: flex; gap: 10px; }
-
-    /* ── Buttons ── */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 8px 20px;
-      border-radius: 20px;
-      border: none;
-      font-family: var(--font);
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: all 0.2s;
-      white-space: nowrap;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(20,184,166,0.3);
-    }
-    .btn-primary:hover { background: #0d9488; box-shadow: 0 4px 14px rgba(20,184,166,0.4); transform: translateY(-1px); }
-
-    .btn-outline {
-      background: transparent;
-      color: var(--text);
-      border: 1.5px solid rgba(20,184,166,0.5);
-    }
-    .btn-outline:hover { background: var(--accent-light); border-color: var(--accent); }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--muted);
-      padding: 6px 10px;
-    }
-    .btn-ghost:hover { background: var(--bg); color: var(--text); }
-
-    .btn-danger {
-      background: var(--danger);
-      color: #fff;
-    }
-    .btn-danger:hover { background: #dc2626; }
-
-    /* ── Layout ── */
-    .layout {
-      display: flex;
-      flex: 1;
-      min-height: 0;
-    }
-
-    /* ── Sidebar ── */
-    aside {
-      width: 220px;
-      flex-shrink: 0;
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      padding: 24px 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sidebar-section-title {
-      font-size: 0.62rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(94,173,167,0.6);
-      padding: 0 20px 10px;
-    }
-
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 9px 16px;
-      margin: 1px 8px;
-      border-radius: 10px;
-      font-size: 0.84rem;
-      font-weight: 500;
-      color: var(--muted);
-      cursor: pointer;
-      transition: all 0.15s;
-      position: relative;
-      user-select: none;
-      letter-spacing: 0.01em;
-    }
-    .nav-item:hover { background: rgba(20,184,166,0.07); color: var(--text); }
-    .nav-item.active {
-      background: rgba(20,184,166,0.12);
-      color: var(--text-bright);
-      font-weight: 600;
-    }
-    .nav-item.active::before {
-      content: '';
-      position: absolute;
-      left: 0; top: 6px; bottom: 6px;
-      width: 3px;
-      background: var(--accent);
-      border-radius: 0 3px 3px 0;
-    }
-
-    .nav-item .count {
-      margin-left: auto;
-      font-size: 0.68rem;
-      color: var(--muted);
-      background: var(--bg);
-      padding: 1px 7px;
-      border-radius: 10px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .nav-album-actions {
-      display: none;
-      gap: 2px;
-      margin-left: auto;
-    }
-    .nav-item:hover .nav-album-actions { display: flex; }
-    .nav-item:hover .count { display: none; }
-
-    .icon-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 2px 5px;
-      border-radius: 4px;
-      color: var(--muted);
-      font-size: 0.8rem;
-      line-height: 1;
-    }
-    .icon-btn:hover { background: rgba(20,184,166,0.15); color: var(--text); }
-
-    .sidebar-divider {
-      border: none;
-      border-top: 1px solid var(--border);
-      margin: 16px 20px;
-    }
-
-    .sidebar-add-album { padding: 0 20px; }
-
-    /* ── Main ── */
-    main {
-      flex: 1;
-      overflow-y: auto;
-      padding: 32px;
-      background: var(--bg);
-    }
-
-    .page-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 28px;
-    }
-
-    .page-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: var(--text-bright);
-    }
-
-    .page-subtitle {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-top: 4px;
-      letter-spacing: 0.02em;
-      font-weight: 400;
-    }
-
-    /* ── Upload zone ── */
-    .upload-zone {
-      border: 2px dashed var(--border);
-      border-radius: var(--radius);
-      padding: 36px;
-      text-align: center;
-      color: var(--muted);
-      transition: all 0.2s;
-      cursor: pointer;
-      margin-bottom: 32px;
-      background: var(--surface);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* film holes decoration on upload zone */
-    .upload-zone::before,
-    .upload-zone::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 22px;
-      background-image: repeating-linear-gradient(
-        to bottom,
-        transparent 0px,
-        transparent 7px,
-        #d6d0c7 7px,
-        #d6d0c7 17px,
-        transparent 17px,
-        transparent 24px
-      );
-      background-size: 100% 24px;
-      opacity: 0.6;
-    }
-    .upload-zone::before { left: 0; }
-    .upload-zone::after { right: 0; }
-
-    .upload-zone:hover,
-    .upload-zone.drag-over {
-      border-color: var(--accent);
-      background: rgba(20,184,166,0.04);
-      color: var(--text);
-    }
-    .upload-zone svg { margin-bottom: 10px; opacity: 0.35; }
-    .upload-zone p { font-size: 0.88rem; font-weight: 500; letter-spacing: 0.02em; }
-    .upload-zone span { font-size: 0.72rem; opacity: 0.5; letter-spacing: 0.04em; text-transform: uppercase; }
-
-    /* ── Film Strips ── */
-    .film-strips-container {
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-
-    .film-strip {
-      background: var(--strip);
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: var(--shadow);
-      border: 1px solid var(--border);
-    }
-
-    .film-perforations {
-      display: flex;
-      align-items: center;
-      padding: 6px 8px;
-      background: #e8e3d9;
-      gap: 7px;
-      overflow: hidden;
-    }
-
-    .perf {
-      flex-shrink: 0;
-      width: 14px;
-      height: 10px;
-      background: var(--bg);
-      border-radius: 3px;
-      border: 1px solid #d4cec4;
-      box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
-    }
-
-    .film-strip-photos {
-      display: flex;
-      gap: 6px;
-      padding: 6px 10px;
-      background: var(--strip);
-      overflow-x: auto;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(20,184,166,0.3) transparent;
-    }
-
-    .film-frame {
-      flex-shrink: 0;
-      width: 180px;
-      aspect-ratio: 4/3;
-      background: #e0dcd4;
-      border: 2px solid var(--frame-border);
-      border-radius: 6px;
-      overflow: hidden;
-      cursor: pointer;
-      position: relative;
-      transition: all 0.25s;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-    }
-
-    .film-frame:hover {
-      border-color: var(--accent);
-      box-shadow: 0 4px 16px rgba(20,184,166,0.2);
-      transform: translateY(-2px);
-    }
-
-    .film-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.35s, filter 0.35s;
-      filter: sepia(8%) brightness(1.02);
-    }
-
-    .film-frame:hover img {
-      transform: scale(1.04);
-      filter: sepia(0%) brightness(1.04);
-    }
-
-    .film-frame-number {
-      position: absolute;
-      bottom: 5px;
-      left: 7px;
-      font-size: 0.58rem;
-      color: rgba(13,148,136,0.55);
-      font-variant-numeric: tabular-nums;
-      letter-spacing: 0.06em;
-      pointer-events: none;
-      font-weight: 600;
-    }
-
-    .film-frame-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(244,241,236,0.82);
-      opacity: 0;
-      transition: opacity 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      backdrop-filter: blur(2px);
-    }
-    .film-frame:hover .film-frame-overlay { opacity: 1; }
-
-    .overlay-btn {
-      background: white;
-      border: 1.5px solid rgba(20,184,166,0.4);
-      border-radius: 20px;
-      padding: 5px 12px;
-      font-size: 0.7rem;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      cursor: pointer;
-      color: var(--text);
-      transition: all 0.15s;
-      box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-    }
-    .overlay-btn:hover { background: var(--accent); color: white; border-color: var(--accent); }
-    .overlay-btn.danger {
-      color: var(--danger);
-      border-color: rgba(239,68,68,0.35);
-    }
-    .overlay-btn.danger:hover { background: var(--danger); color: white; border-color: var(--danger); }
-
-    /* ── Empty state ── */
-    .empty-state {
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--muted);
-    }
-    .empty-state svg { opacity: 0.2; margin-bottom: 16px; }
-    .empty-state h3 { font-size: 1rem; font-weight: 600; margin-bottom: 6px; color: var(--text); letter-spacing: 0.04em; text-transform: uppercase; }
-    .empty-state p { font-size: 0.875rem; }
-
-    /* ── Modals ── */
-    .modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(200,195,185,0.5);
-      backdrop-filter: blur(8px);
-      z-index: 200;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .modal-backdrop.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    .modal {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 32px;
-      width: 420px;
-      max-width: 95vw;
-      box-shadow: 0 12px 48px rgba(0,0,0,0.14), 0 2px 8px rgba(0,0,0,0.08);
-      transform: translateY(8px) scale(0.99);
-      transition: transform 0.2s;
-    }
-    .modal-backdrop.open .modal { transform: translateY(0) scale(1); }
-
-    .modal-title {
-      font-size: 0.95rem;
-      font-weight: 600;
-      margin-bottom: 20px;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-bright);
-    }
-
-    .form-group { margin-bottom: 16px; }
-    .form-label {
-      display: block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .form-input {
-      width: 100%;
-      padding: 10px 16px;
-      border: 1.5px solid var(--border);
-      border-radius: 12px;
-      font-family: var(--font);
-      font-size: 0.9rem;
-      color: var(--text);
-      background: var(--bg);
-      transition: border-color 0.15s, box-shadow 0.15s;
-      outline: none;
-    }
-    .form-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(20,184,166,0.12); }
-    .form-input::placeholder { color: #a8cec9; }
-
-    .form-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 24px;
-    }
-
-    /* ── Lightbox ── */
-    .lightbox-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(244,241,236,0.94);
-      backdrop-filter: blur(12px);
-      z-index: 300;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s;
-    }
-    .lightbox-backdrop.open {
-      opacity: 1;
-      pointer-events: all;
-    }
-
-    /* filmstrip strip along top of lightbox */
-    .lightbox-filmstrip-top {
-      position: fixed;
-      top: 0;
-      left: 0; right: 0;
-      height: 16px;
-      background: #e8e3d9;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 0 8px;
-      overflow: hidden;
-    }
-
-    .lightbox-perf {
-      flex-shrink: 0;
-      width: 13px;
-      height: 8px;
-      background: var(--bg);
-      border: 1px solid #d4cec4;
-      border-radius: 2px;
-    }
-
-    .lightbox-img {
-      max-width: 88vw;
-      max-height: 80vh;
-      border-radius: 10px;
-      box-shadow: 0 0 0 3px var(--border), 0 20px 60px rgba(0,0,0,0.18);
-      object-fit: contain;
-    }
-
-    .lightbox-close {
-      position: fixed;
-      top: 24px;
-      right: 24px;
-      background: rgba(255,255,255,0.9);
-      border: 1px solid var(--border);
-      color: var(--muted);
-      font-size: 1rem;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .lightbox-close:hover { background: white; border-color: var(--accent); color: var(--accent); }
-
-    .lightbox-info {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.85);
-      color: var(--text);
-      padding: 8px 22px;
-      border-radius: 20px;
-      font-size: 0.78rem;
-      border: 1px solid var(--border);
-      backdrop-filter: blur(8px);
-      text-align: center;
-      letter-spacing: 0.03em;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
-
-    .lightbox-nav {
-      position: fixed;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(255,255,255,0.85);
-      border: 1px solid var(--border);
-      color: var(--text);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1.2rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .lightbox-nav:hover { background: white; border-color: var(--accent); color: var(--accent); }
-    .lightbox-prev { left: 20px; }
-    .lightbox-next { right: 20px; }
-
-    /* ── Move to album modal select ── */
-    .album-list-select {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 240px;
-      overflow-y: auto;
-    }
-
-    .album-option {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 10px 16px;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      cursor: pointer;
-      transition: all 0.15s;
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-    .album-option:hover { border-color: var(--accent); background: var(--accent-light); color: var(--text); }
-    .album-option.selected { border-color: var(--accent); background: rgba(20,184,166,0.08); color: var(--text-bright); font-weight: 600; }
-
-    /* ── Toast ── */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 500;
-    }
-
-    .toast {
-      background: white;
-      color: var(--text-bright);
-      border: 1.5px solid rgba(20,184,166,0.3);
-      padding: 10px 20px;
-      border-radius: 20px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-      animation: slideIn 0.2s ease;
-    }
-
-    @keyframes slideIn {
-      from { transform: translateX(20px); opacity: 0; }
-      to { transform: translateX(0); opacity: 1; }
-    }
-
-    /* ── Responsive ── */
-    @media (max-width: 640px) {
-      aside { display: none; }
-      main { padding: 20px 12px; }
-      .film-frame { width: 130px; }
-    }
-  </style>
+<meta charset="utf-8">
+<title>Zephyra · photo journal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--desk:#202023;--page:#0c0c0d;--line:rgba(255,255,255,.075);--ink:#f2f2f2;--ink2:#8b8b92;--tape:rgba(255,46,147,.88);--stamp:#ff2e93;--margin:#ff2e93;--tab:#ff2e93;--tabtxt:#0c0c0d;--accent:#ff2e93}
+[data-theme=blue]{--tape:rgba(47,139,255,.9);--stamp:#2f8bff;--margin:#2f8bff;--tab:#2f8bff;--tabtxt:#fff;--accent:#2f8bff}
+[data-theme=white]{--tape:rgba(236,230,214,.88);--stamp:#f2f2f2;--margin:rgba(255,255,255,.55);--tab:#f2f2f2;--tabtxt:#0c0c0d;--accent:#f2f2f2}
+body{font-family:Georgia,'Iowan Old Style',serif;color:var(--ink);min-height:100vh;padding:40px 28px 60px;
+background:radial-gradient(1200px 600px at 50% 0,rgba(255,255,255,.06),transparent 70%),var(--desk)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;z-index:50;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .3  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.page{position:relative;max-width:1180px;margin:0 auto;padding:34px 46px 56px 86px;min-height:80vh;background:var(--page);
+background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--line) 31px,var(--line) 32px);
+box-shadow:0 2px 0 rgba(0,0,0,.3),0 26px 50px rgba(0,0,0,.5),inset 0 0 70px rgba(0,0,0,.6);border-radius:3px}
+.page::before{content:"";position:absolute;left:62px;top:0;bottom:0;width:2px;background:var(--margin);opacity:.55}
+.holes{position:absolute;left:18px;top:0;bottom:0;width:22px;display:flex;flex-direction:column;justify-content:space-around;padding:60px 0}
+.holes i{width:20px;height:20px;border-radius:50%;background:var(--desk);box-shadow:inset 0 3px 5px rgba(0,0,0,.6)}
+header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:14px;margin-bottom:22px;border-bottom:3px double var(--ink);gap:20px}
+.kicker{font:700 11px 'Courier New',monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--ink2)}
+h1{font:700 italic 64px/1 'Bradley Hand','Segoe Script','Brush Script MT','Snell Roundhand',cursive,Georgia;margin-top:6px}
+h1 span{font:400 17px 'Courier New',monospace;letter-spacing:.08em;margin-left:14px;color:var(--ink2);font-style:normal}
+.stamp{flex:none;width:104px;height:104px;border:3px solid var(--stamp);border-radius:50%;display:grid;place-items:center;text-align:center;color:var(--stamp);
+font:700 12px/1.25 'Courier New',monospace;letter-spacing:.1em;transform:rotate(-11deg);outline:1.5px solid var(--stamp);outline-offset:-9px;opacity:.9}
+.stamp b{font-size:26px;display:block;letter-spacing:0}
+.tabs{display:flex;gap:6px;margin:0 0 14px;align-items:flex-end;flex-wrap:wrap;border-bottom:2px solid var(--ink)}
+.tabs button{font:700 12px 'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;padding:9px 16px 7px;background:var(--page);border:2px solid var(--ink);border-bottom:0;border-radius:8px 8px 0 0;color:var(--ink);cursor:pointer;margin-bottom:-2px}
+.tabs button:hover{border-color:var(--accent)}
+.tabs button.on{background:var(--tab);color:var(--tabtxt);padding-top:13px;border-color:var(--tab)}
+.tabs button.add{border-style:dashed;color:var(--ink2)}
+.tabs .sp{flex:1}
+.themes{display:flex;gap:8px;align-self:center;margin:0 4px 8px}
+.themes button{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);cursor:pointer;padding:0;margin:0;background:none}
+.bar{display:flex;gap:12px;align-items:center;justify-content:space-between;margin:0 0 24px;flex-wrap:wrap}
+.hint{font:700 11px 'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2)}
+.btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn{font:700 12px 'Courier New',monospace;letter-spacing:.12em;text-transform:uppercase;padding:10px 16px;background:var(--accent);color:var(--tabtxt);border:2px solid var(--accent);border-radius:4px;cursor:pointer;box-shadow:3px 3px 0 rgba(255,255,255,.18)}
+[data-theme=white] .btn,[data-theme=white] .btn.ghost{color:#0c0c0d}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--ink2);box-shadow:none}
+.btn.ghost:hover{border-color:var(--accent);color:var(--accent)}
+.btn.danger:hover{border-color:#ff5a5a;color:#ff5a5a}
+.grid{columns:4;column-gap:26px}
+figure{color:#1d1d20;display:inline-block;width:100%;break-inside:avoid;position:relative;background:#fffdf7;padding:11px 11px 12px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.4),0 10px 18px rgba(0,0,0,.45)}
+figure:nth-child(3n+1){transform:rotate(-1.8deg)}figure:nth-child(3n+2){transform:rotate(1.4deg)}figure:nth-child(3n){transform:rotate(-.4deg)}
+figure:nth-child(4n+2)::before{content:"";position:absolute;top:-13px;left:50%;width:84px;height:26px;margin-left:-42px;background:var(--tape);transform:rotate(-3deg);box-shadow:0 1px 3px rgba(0,0,0,.3);clip-path:polygon(0 8%,3% 0,6% 10%,9% 0,100% 0,97% 50%,100% 100%,6% 100%,3% 88%,0 100%)}
+figure:not(:nth-child(4n+2))::before{content:"";position:absolute;top:-10px;left:-12px;width:62px;height:22px;background:var(--tape);transform:rotate(-36deg);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+figure img{display:block;width:100%;height:auto;cursor:zoom-in;background:#ddd}
+figcaption{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:10px 4px 0}
+.t{font:italic 700 17px/1.15 'Bradley Hand','Segoe Script','Brush Script MT',cursive,Georgia;outline:none;min-width:2ch;flex:1;word-break:break-word;border-bottom:1px dashed transparent;cursor:text}
+.t:hover,.t:focus{border-bottom-color:#b9b9c0}
+.t:empty::before{content:"Add a title";color:#a5a5ac}
+figcaption small{font:700 10px 'Courier New',monospace;letter-spacing:.12em;color:#77777e;flex:none}
+.tools{position:absolute;z-index:3;top:6px;right:6px;display:flex;gap:6px;opacity:0;transition:opacity .15s}
+figure:hover .tools,figure:focus-within .tools{opacity:1}
+@media (hover:none){.tools{opacity:1}}
+.tools button{width:30px;height:30px;border-radius:50%;border:2px solid #1d1d20;background:#fffdf7;color:#1d1d20;font:700 14px/1 'Courier New',monospace;cursor:pointer;box-shadow:1px 2px 0 rgba(0,0,0,.35)}
+.tools button:hover{background:var(--accent);color:var(--tabtxt)}
+.empty{text-align:center;padding:70px 20px;color:var(--ink2)}
+.note{display:inline-block;background:#fffdf7;color:#1d1d20;padding:30px 38px;transform:rotate(-1.5deg);box-shadow:0 12px 26px rgba(0,0,0,.5);position:relative;max-width:420px}
+.note::before{content:"";position:absolute;top:-12px;left:50%;width:80px;height:24px;margin-left:-40px;background:var(--tape);transform:rotate(3deg)}
+.note h2{font:italic 700 28px 'Bradley Hand','Segoe Script','Brush Script MT',cursive,Georgia;margin-bottom:8px}
+.note p{font:14px/1.5 Georgia;color:#555;margin-bottom:16px}
+.drop{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:rgba(12,12,13,.82);font:700 22px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);border:6px dashed var(--accent);margin:14px}
+.drop.on{display:grid}
+dialog{border:0;background:#fffdf7;color:#1d1d20;padding:26px 28px;max-width:92vw;width:380px;box-shadow:0 20px 50px rgba(0,0,0,.65);transform:rotate(-.6deg);margin:auto}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+dialog h2{font:italic 700 26px 'Bradley Hand','Segoe Script','Brush Script MT',cursive,Georgia;margin-bottom:14px}
+dialog input[type=text]{width:100%;font:16px Georgia;padding:10px 12px;border:2px solid #1d1d20;background:#fff;margin-bottom:16px}
+dialog .row{display:flex;justify-content:flex-end;gap:10px}
+dialog .btn.ghost{color:#1d1d20;border-color:#1d1d20}
+dialog label{display:flex;gap:10px;align-items:center;padding:8px 2px;font:16px Georgia;cursor:pointer}
+dialog label input{width:18px;height:18px;accent-color:var(--accent)}
+.lb{position:fixed;inset:0;z-index:80;display:none;background:rgba(5,5,6,.93);align-items:center;justify-content:center;flex-direction:column;padding:30px}
+.lb.on{display:flex}
+.lb figure{transform:rotate(-.8deg);max-width:min(92vw,1000px);margin:0;display:block;width:auto}
+.lb figure::before{display:block}
+.lb img{max-width:100%;max-height:72vh;width:auto;cursor:default}
+.lb .x,.lb .nav{position:fixed;background:#fffdf7;color:#1d1d20;border:2px solid #1d1d20;border-radius:50%;width:44px;height:44px;font:700 18px 'Courier New',monospace;cursor:pointer}
+.lb .x{top:22px;right:24px}.lb .prev{left:22px;top:50%}.lb .next{right:22px;top:50%}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) rotate(-1deg);z-index:95;background:#fffdf7;color:#1d1d20;padding:10px 18px;font:700 12px 'Courier New',monospace;letter-spacing:.1em;text-transform:uppercase;box-shadow:0 8px 20px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (max-width:1000px){.grid{columns:3}}
+@media (max-width:760px){.grid{columns:2;column-gap:18px}.page{padding:26px 18px 40px 46px}.page::before{left:34px}.holes{left:6px}.holes i{width:14px;height:14px}h1{font-size:44px}h1 span{display:none}.stamp{width:78px;height:78px;font-size:9px}.stamp b{font-size:18px}}
+@media (max-width:480px){.grid{columns:1}}
+</style>
 </head>
 <body>
-
-<!-- Header -->
-<header>
-  <div class="logo">
-    <div class="logo-film">
-      <div class="logo-perf"></div>
-      <div class="logo-perf"></div>
-      <div class="logo-perf"></div>
-    </div>
-    My Gallery
-    <div class="logo-film">
-      <div class="logo-perf"></div>
-      <div class="logo-perf"></div>
-      <div class="logo-perf"></div>
-    </div>
+<div class="page" id="page">
+  <div class="holes"><i></i><i></i><i></i><i></i><i></i></div>
+  <header>
+    <div><div class="kicker">Photo journal · Vol. 12</div><h1>Zephyra<span>— all the days, one page</span></h1></div>
+    <div class="stamp"><div>EST.<b id="count">0</b>PHOTOS</div></div>
+  </header>
+  <nav class="tabs" id="tabs" aria-label="Albums"></nav>
+  <div class="bar">
+    <div class="hint" id="hint"></div>
+    <div class="btns" id="btns"></div>
   </div>
-  <div class="header-actions">
-    <button class="btn btn-outline" onclick="openAlbumModal()">+ New Album</button>
-    <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Upload Photos</button>
-  </div>
-</header>
-
-<input type="file" id="fileInput" multiple accept="image/*" style="display:none" onchange="handleFileSelect(event)" />
-
-<div class="layout">
-  <!-- Sidebar -->
-  <aside>
-    <div class="sidebar-section-title">Library</div>
-    <div class="nav-item active" data-view="all" onclick="setView('all')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
-        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
-      </svg>
-      All Photos
-      <span class="count" id="total-count">0</span>
-    </div>
-
-    <hr class="sidebar-divider" />
-    <div class="sidebar-section-title">Albums</div>
-    <div id="album-nav"></div>
-
-    <div class="sidebar-add-album" style="margin-top:8px;">
-      <button class="btn btn-ghost" style="width:100%;justify-content:flex-start;gap:8px;font-size:0.8rem;" onclick="openAlbumModal()">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
-          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
-        </svg>
-        New Album
-      </button>
-    </div>
-  </aside>
-
-  <!-- Main Content -->
   <main>
-    <div class="page-header">
-      <div>
-        <div class="page-title" id="view-title">All Photos</div>
-        <div class="page-subtitle" id="view-subtitle">Your entire collection</div>
-      </div>
-    </div>
-
-    <!-- Upload Zone -->
-    <div class="upload-zone" id="uploadZone"
-         onclick="document.getElementById('fileInput').click()"
-         ondragover="onDragOver(event)"
-         ondragleave="onDragLeave(event)"
-         ondrop="onDrop(event)">
-      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" display="block" style="margin:0 auto 10px;">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-        <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-      </svg>
-      <p>Drop photos here or click to upload</p>
-      <span>Supports JPG, PNG, GIF, WEBP</span>
-    </div>
-
-    <!-- Film Strips -->
-    <div class="film-strips-container" id="photoGrid"></div>
-
-    <!-- Empty State -->
-    <div class="empty-state" id="emptyState" style="display:none;">
-      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" display="block" style="margin:0 auto 16px;">
-        <rect x="2" y="8" width="20" height="12" rx="2"/>
-        <path d="M2 10h20M6 8V6M10 8V6M14 8V6M18 8V6"/>
-      </svg>
-      <h3 id="empty-title">No photos yet</h3>
-      <p id="empty-desc">Upload some photos to get started</p>
+    <div class="grid" id="grid"></div>
+    <div class="empty" id="empty" hidden>
+      <div class="note"><h2 id="emptyTitle">Your journal is empty</h2><p id="emptyText">Drop photos anywhere on this page, or press the button to pick them from your device.</p><button class="btn" id="emptyBtn">＋ Add photos</button></div>
     </div>
   </main>
 </div>
 
-<!-- Create/Edit Album Modal -->
-<div class="modal-backdrop" id="albumModal" onclick="closeOnBackdrop(event,'albumModal')">
-  <div class="modal">
-    <div class="modal-title" id="albumModalTitle">New Album</div>
-    <div class="form-group">
-      <label class="form-label">Album Name</label>
-      <input class="form-input" id="albumNameInput" placeholder="e.g. Summer 2024" onkeydown="if(event.key==='Enter')saveAlbum()" />
-    </div>
-    <div class="form-group">
-      <label class="form-label">Description (optional)</label>
-      <input class="form-input" id="albumDescInput" placeholder="A short description..." />
-    </div>
-    <div class="form-actions">
-      <button class="btn btn-outline" onclick="closeModal('albumModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveAlbum()">Save Album</button>
-    </div>
-  </div>
-</div>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<div class="drop" id="drop">Drop photos to add them</div>
 
-<!-- Move to Album Modal -->
-<div class="modal-backdrop" id="moveModal" onclick="closeOnBackdrop(event,'moveModal')">
-  <div class="modal">
-    <div class="modal-title">Add to Album</div>
-    <div class="album-list-select" id="albumListSelect"></div>
-    <div class="form-actions">
-      <button class="btn btn-outline" onclick="closeModal('moveModal')">Cancel</button>
-      <button class="btn btn-primary" onclick="confirmMove()">Add to Album</button>
-    </div>
-  </div>
-</div>
-
-<!-- Lightbox -->
-<div class="lightbox-backdrop" id="lightbox" onclick="closeLightbox(event)">
-  <div class="lightbox-filmstrip-top" id="lightboxFilmstripTop"></div>
-  <button class="lightbox-close" onclick="closeLightboxDirect()">✕</button>
-  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&#8592;</button>
-  <img class="lightbox-img" id="lightboxImg" src="" alt="" />
-  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">&#8594;</button>
-  <div class="lightbox-info" id="lightboxInfo"></div>
-</div>
-
-<!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+<dialog id="nameDlg"><h2 id="nameTitle">New album</h2><input type="text" id="nameInput" maxlength="40" placeholder="e.g. Summer 2026"><div class="row"><button class="btn ghost" id="nameCancel" type="button">Cancel</button><button class="btn" id="nameOk" type="button">Save</button></div></dialog>
+<dialog id="albDlg"><h2>Put in albums</h2><div id="albList"></div><div class="row" style="margin-top:14px"><button class="btn ghost" id="albCancel" type="button">Cancel</button><button class="btn" id="albOk" type="button">Done</button></div></dialog>
+<div class="lb" id="lb"><button class="x" id="lbX" aria-label="Close">✕</button><button class="nav prev" id="lbPrev" aria-label="Previous">←</button><figure><img id="lbImg" alt=""><figcaption><span class="t" id="lbT" style="cursor:default"></span><small id="lbD"></small></figcaption></figure><button class="nav next" id="lbNext" aria-label="Next">→</button></div>
+<div class="toast" id="toast"></div>
 
 <script>
-// ── State ──
-let state = {
-  photos: [],    // {id, name, src, albumIds, uploadedAt}
-  albums: [],    // {id, name, desc, createdAt}
-  currentView: 'all',
-  editingAlbumId: null,
-  movingPhotoId: null,
-  selectedAlbumId: null,
-  lightboxIndex: 0,
-};
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const LS={get(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 
-const STORAGE_KEY = 'photoGallery_v1';
-const STRIP_SIZE = 5;
+/* ---------- storage: photos in IndexedDB, albums + theme in localStorage ---------- */
+const dbp=new Promise((res,rej)=>{const r=indexedDB.open('zephyra-journal',1);r.onupgradeneeded=()=>r.result.createObjectStore('photos',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function tx(mode,fn){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction('photos',mode);let out;try{out=fn(t.objectStore('photos'))}catch(e){return rej(e)}t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
 
-function save() {
-  const data = {
-    photos: state.photos.map(p => ({ id: p.id, name: p.name, albumIds: p.albumIds, uploadedAt: p.uploadedAt })),
-    albums: state.albums,
-  };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  state.photos.forEach(p => {
-    try { localStorage.setItem(`photo_src_${p.id}`, p.src); } catch(e) {}
-  });
+const state={photos:[],albums:LS.get('zj.albums',[]),view:'all',dlgPhoto:null,nameMode:null,lb:-1};
+const urls=new Map();
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const urlOf=p=>{if(!urls.has(p.id))urls.set(p.id,URL.createObjectURL(p.blob));return urls.get(p.id)};
+const saveAlbums=()=>LS.set('zj.albums',state.albums);
+const fmt=iso=>{const d=new Date(iso);return isNaN(d)?'':String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')};
+const fmtLong=iso=>{const d=new Date(iso);return isNaN(d)?'':d.toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'})};
+let toastT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
+
+/* ---------- theme ---------- */
+function setTheme(t){document.documentElement.dataset.theme=t==='pink'?'':t;LS.set('zj.theme',t)}
+setTheme(LS.get('zj.theme','pink'));
+
+/* ---------- add photos ---------- */
+async function shrink(file){
+  const bmp=await createImageBitmap(file);
+  const max=1800,k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+  const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+  c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);
+  if(bmp.close)bmp.close();
+  return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',.86));
 }
-
-function load() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return;
-    const data = JSON.parse(raw);
-    state.albums = data.albums || [];
-    state.photos = (data.photos || []).map(p => ({
-      ...p,
-      src: localStorage.getItem(`photo_src_${p.id}`) || ''
-    })).filter(p => p.src);
-  } catch(e) {}
-}
-
-// ── Render ──
-function render() {
-  renderAlbumNav();
-  renderGrid();
-  renderCounts();
-}
-
-function renderAlbumNav() {
-  const nav = document.getElementById('album-nav');
-  nav.innerHTML = state.albums.map(a => {
-    const count = state.photos.filter(p => p.albumIds.includes(a.id)).length;
-    return `
-    <div class="nav-item ${state.currentView === a.id ? 'active' : ''}" onclick="setView('${a.id}')">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${escHtml(a.name)}</span>
-      <span class="count">${count}</span>
-      <span class="nav-album-actions">
-        <button class="icon-btn" title="Rename" onclick="event.stopPropagation();openEditAlbum('${a.id}')">✎</button>
-        <button class="icon-btn" title="Delete" onclick="event.stopPropagation();deleteAlbum('${a.id}')">✕</button>
-      </span>
-    </div>`;
-  }).join('');
-}
-
-function renderCounts() {
-  document.getElementById('total-count').textContent = state.photos.length;
-}
-
-function getViewPhotos() {
-  if (state.currentView === 'all') return state.photos;
-  return state.photos.filter(p => p.albumIds.includes(state.currentView));
-}
-
-function makePerforations(count) {
-  return Array(count).fill('<div class="perf"></div>').join('');
-}
-
-function renderGrid() {
-  const photos = getViewPhotos();
-  const container = document.getElementById('photoGrid');
-  const empty = document.getElementById('emptyState');
-
-  if (photos.length === 0) {
-    container.innerHTML = '';
-    empty.style.display = 'block';
-    if (state.currentView === 'all') {
-      document.getElementById('empty-title').textContent = 'No photos yet';
-      document.getElementById('empty-desc').textContent = 'Upload some photos to get started';
-    } else {
-      const album = state.albums.find(a => a.id === state.currentView);
-      document.getElementById('empty-title').textContent = 'Album is empty';
-      document.getElementById('empty-desc').textContent = `Add photos to "${album?.name || 'this album'}" using the Add to Album option`;
-    }
-    return;
+async function addFiles(list){
+  const files=[...list].filter(f=>f.type.startsWith('image/'));
+  if(!files.length){toast('Those aren’t images');return}
+  let ok=0,bad=0;
+  for(const f of files){
+    try{
+      const blob=await shrink(f);
+      const p={id:uid(),blob,title:f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').slice(0,60),date:new Date(f.lastModified||Date.now()).toISOString(),added:Date.now(),albums:state.view!=='all'?[state.view]:[]};
+      await tx('readwrite',s=>s.put(p));state.photos.unshift(p);ok++;
+    }catch(e){bad++}
   }
-
-  empty.style.display = 'none';
-
-  // Group into filmstrips
-  const strips = [];
-  for (let i = 0; i < photos.length; i += STRIP_SIZE) {
-    strips.push(photos.slice(i, i + STRIP_SIZE));
-  }
-
-  const perfCount = 30;
-  const perfs = makePerforations(perfCount);
-
-  container.innerHTML = strips.map((strip, si) => `
-    <div class="film-strip">
-      <div class="film-perforations">${perfs}</div>
-      <div class="film-strip-photos">
-        ${strip.map((p, fi) => {
-          const globalIdx = si * STRIP_SIZE + fi;
-          return `
-          <div class="film-frame" onclick="openLightbox(${globalIdx})">
-            <img src="${p.src}" alt="${escHtml(p.name)}" loading="lazy" />
-            <div class="film-frame-number">${String(globalIdx + 1).padStart(2,'0')}</div>
-            <div class="film-frame-overlay">
-              <button class="overlay-btn" onclick="event.stopPropagation();openMove('${p.id}')">+ Album</button>
-              <button class="overlay-btn danger" onclick="event.stopPropagation();deletePhoto('${p.id}')">Delete</button>
-            </div>
-          </div>`;
-        }).join('')}
-      </div>
-      <div class="film-perforations">${perfs}</div>
-    </div>
-  `).join('');
-}
-
-// ── Lightbox filmstrip ──
-function initLightboxFilmstrip() {
-  const top = document.getElementById('lightboxFilmstripTop');
-  top.innerHTML = makePerforations(60);
-}
-
-// ── View ──
-function setView(view) {
-  state.currentView = view;
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const el = view === 'all'
-    ? document.querySelector('[data-view="all"]')
-    : null;
-  if (el) el.classList.add('active');
-
-  const titleEl = document.getElementById('view-title');
-  const subtitleEl = document.getElementById('view-subtitle');
-
-  if (view === 'all') {
-    titleEl.textContent = 'All Photos';
-    subtitleEl.textContent = 'Your entire collection';
-  } else {
-    const album = state.albums.find(a => a.id === view);
-    titleEl.textContent = album?.name || 'Album';
-    subtitleEl.textContent = album?.desc || '';
-  }
-
+  state.photos.sort((a,b)=>b.added-a.added);
   render();
+  toast(ok?`Added ${ok} photo${ok>1?'s':''}`+(bad?` · ${bad} couldn’t be read`:''):'Couldn’t read those files');
 }
 
-// ── Upload ──
-function handleFileSelect(e) {
-  handleFiles([...e.target.files]);
-  e.target.value = '';
-}
-
-function onDragOver(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.add('drag-over');
-}
-function onDragLeave(e) {
-  document.getElementById('uploadZone').classList.remove('drag-over');
-}
-function onDrop(e) {
-  e.preventDefault();
-  document.getElementById('uploadZone').classList.remove('drag-over');
-  handleFiles([...e.dataTransfer.files].filter(f => f.type.startsWith('image/')));
-}
-
-function handleFiles(files) {
-  let loaded = 0;
-  files.forEach(file => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const photo = {
-        id: 'ph_' + Date.now() + '_' + Math.random().toString(36).slice(2),
-        name: file.name.replace(/\.[^.]+$/, ''),
-        src: e.target.result,
-        albumIds: state.currentView !== 'all' ? [state.currentView] : [],
-        uploadedAt: new Date().toISOString(),
-      };
-      state.photos.unshift(photo);
-      loaded++;
-      if (loaded === files.length) {
-        save();
-        render();
-        toast(`${files.length} photo${files.length > 1 ? 's' : ''} uploaded`);
-      }
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-// ── Albums ──
-function openAlbumModal() {
-  state.editingAlbumId = null;
-  document.getElementById('albumModalTitle').textContent = 'New Album';
-  document.getElementById('albumNameInput').value = '';
-  document.getElementById('albumDescInput').value = '';
-  openModal('albumModal');
-  setTimeout(() => document.getElementById('albumNameInput').focus(), 100);
-}
-
-function openEditAlbum(id) {
-  const album = state.albums.find(a => a.id === id);
-  if (!album) return;
-  state.editingAlbumId = id;
-  document.getElementById('albumModalTitle').textContent = 'Rename Album';
-  document.getElementById('albumNameInput').value = album.name;
-  document.getElementById('albumDescInput').value = album.desc || '';
-  openModal('albumModal');
-  setTimeout(() => document.getElementById('albumNameInput').focus(), 100);
-}
-
-function saveAlbum() {
-  const name = document.getElementById('albumNameInput').value.trim();
-  const desc = document.getElementById('albumDescInput').value.trim();
-  if (!name) { document.getElementById('albumNameInput').focus(); return; }
-
-  if (state.editingAlbumId) {
-    const album = state.albums.find(a => a.id === state.editingAlbumId);
-    if (album) { album.name = name; album.desc = desc; }
-    toast('Album updated');
-  } else {
-    const album = {
-      id: 'al_' + Date.now(),
-      name,
-      desc,
-      createdAt: new Date().toISOString(),
-    };
-    state.albums.push(album);
-    toast(`Album "${name}" created`);
+/* ---------- render ---------- */
+function visible(){return state.view==='all'?state.photos:state.photos.filter(p=>p.albums.includes(state.view))}
+function render(){
+  if(state.view!=='all'&&!state.albums.some(a=>a.id===state.view))state.view='all';
+  $('count').textContent=state.photos.length;
+  // tabs
+  const tabs=$('tabs');tabs.innerHTML='';
+  const mk=(label,id,cls)=>{const b=document.createElement('button');b.type='button';b.textContent=label;if(cls)b.className=cls;if(id===state.view)b.classList.add('on');b.onclick=()=>{if(id==='__new')openName('new');else{state.view=id;render()}};tabs.appendChild(b)};
+  mk(`All · ${state.photos.length}`,'all');
+  state.albums.forEach(a=>mk(`${a.name} · ${state.photos.filter(p=>p.albums.includes(a.id)).length}`,a.id));
+  mk('＋ Album','__new','add');
+  const sp=document.createElement('div');sp.className='sp';tabs.appendChild(sp);
+  const th=document.createElement('div');th.className='themes';th.title='Accent colour';
+  [['pink','#ff2e93'],['blue','#2f8bff'],['white','#f2f2f2']].forEach(([n,c])=>{const b=document.createElement('button');b.type='button';b.style.background=c;b.setAttribute('aria-label',n+' accent');b.onclick=()=>setTheme(n);th.appendChild(b)});
+  tabs.appendChild(th);
+  // bar
+  const album=state.albums.find(a=>a.id===state.view),list=visible();
+  $('hint').textContent=album?`${album.name} — ${list.length} photo${list.length===1?'':'s'}`:`${state.photos.length} photo${state.photos.length===1?'':'s'} · newest first`;
+  const btns=$('btns');btns.innerHTML='';
+  const add=(t,cls,fn)=>{const b=document.createElement('button');b.type='button';b.className='btn '+(cls||'');b.textContent=t;b.onclick=fn;btns.appendChild(b)};
+  if(album){add('Rename album','ghost',()=>openName('rename'));add('Delete album','ghost danger',()=>{if(confirm(`Delete the album “${album.name}”? The photos stay in All.`)){state.photos.forEach(p=>{p.albums=p.albums.filter(x=>x!==album.id);tx('readwrite',s=>s.put(p))});state.albums=state.albums.filter(a=>a.id!==album.id);saveAlbums();state.view='all';render();toast('Album deleted')}})}
+  add('＋ Add photos','',()=>$('file').click());
+  // grid
+  const grid=$('grid');grid.innerHTML='';
+  list.forEach((p,i)=>grid.appendChild(figure(p,i)));
+  $('empty').hidden=list.length>0;
+  if(!list.length){
+    const all=state.view==='all';
+    $('emptyTitle').textContent=all?'Your journal is empty':'This album is empty';
+    $('emptyText').textContent=all?'Drop photos anywhere on this page, or press the button to pick them from your device.':'Add photos here, or open a photo in All and press ＋ to put it in this album.';
   }
+}
+function figure(p,i){
+  const f=document.createElement('figure');
+  const img=document.createElement('img');img.src=urlOf(p);img.alt=p.title||'Photo';img.loading='lazy';img.onclick=()=>openLb(i);f.appendChild(img);
+  const cap=document.createElement('figcaption');
+  const t=document.createElement('span');t.className='t';t.contentEditable='true';t.spellcheck=false;t.textContent=p.title;
+  t.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();t.blur()}};
+  t.onblur=()=>{const v=t.textContent.trim().slice(0,60);t.textContent=v;if(v!==p.title){p.title=v;tx('readwrite',s=>s.put(p))}};
+  const d=document.createElement('small');d.textContent=fmt(p.date);
+  cap.append(t,d);f.appendChild(cap);
+  const tools=document.createElement('div');tools.className='tools';
+  const b1=document.createElement('button');b1.type='button';b1.textContent='＋';b1.title='Put in albums';b1.onclick=()=>openAlb(p);
+  const b2=document.createElement('button');b2.type='button';b2.textContent='✕';b2.title='Delete photo';b2.onclick=()=>delPhoto(p);
+  tools.append(b1,b2);f.appendChild(tools);
+  return f;
+}
+async function delPhoto(p){
+  if(!confirm('Delete this photo for good?'))return;
+  await tx('readwrite',s=>s.delete(p.id));
+  state.photos=state.photos.filter(x=>x.id!==p.id);
+  if(urls.has(p.id)){URL.revokeObjectURL(urls.get(p.id));urls.delete(p.id)}
+  render();toast('Photo deleted');
+}
 
-  closeModal('albumModal');
-  save();
+/* ---------- album dialogs ---------- */
+function openName(mode){
+  state.nameMode=mode;const a=state.albums.find(x=>x.id===state.view);
+  $('nameTitle').textContent=mode==='new'?'New album':'Rename album';
+  $('nameInput').value=mode==='rename'&&a?a.name:'';
+  $('nameDlg').showModal();$('nameInput').focus();$('nameInput').select();
+}
+function saveName(){
+  const v=$('nameInput').value.trim();if(!v){$('nameInput').focus();return}
+  if(state.nameMode==='new'){const a={id:uid(),name:v};state.albums.push(a);state.view=a.id;toast('Album created')}
+  else{const a=state.albums.find(x=>x.id===state.view);if(a)a.name=v;toast('Album renamed')}
+  saveAlbums();$('nameDlg').close();render();
+}
+$('nameOk').onclick=saveName;$('nameCancel').onclick=()=>$('nameDlg').close();
+$('nameInput').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();saveName()}};
+
+function openAlb(p){
+  state.dlgPhoto=p;const box=$('albList');box.innerHTML='';
+  if(!state.albums.length){const m=document.createElement('p');m.style.cssText='font:15px/1.5 Georgia;color:#555';m.textContent='You have no albums yet. Close this and press “＋ Album” to make one.';box.appendChild(m)}
+  state.albums.forEach(a=>{const l=document.createElement('label');const c=document.createElement('input');c.type='checkbox';c.value=a.id;c.checked=p.albums.includes(a.id);l.append(c,document.createTextNode(a.name));box.appendChild(l)});
+  $('albDlg').showModal();
+}
+$('albOk').onclick=()=>{const p=state.dlgPhoto;if(p){p.albums=[...$('albList').querySelectorAll('input:checked')].map(c=>c.value);tx('readwrite',s=>s.put(p))}$('albDlg').close();render()};
+$('albCancel').onclick=()=>$('albDlg').close();
+
+/* ---------- lightbox ---------- */
+function openLb(i){state.lb=i;showLb();$('lb').classList.add('on')}
+function showLb(){const l=visible(),p=l[state.lb];if(!p)return closeLb();$('lbImg').src=urlOf(p);$('lbImg').alt=p.title;$('lbT').textContent=p.title||'Untitled';$('lbD').textContent=fmtLong(p.date)}
+function closeLb(){$('lb').classList.remove('on');state.lb=-1}
+function stepLb(d){const n=visible().length;if(!n)return;state.lb=(state.lb+d+n)%n;showLb()}
+$('lbX').onclick=closeLb;$('lbPrev').onclick=()=>stepLb(-1);$('lbNext').onclick=()=>stepLb(1);
+$('lb').onclick=e=>{if(e.target===$('lb'))closeLb()};
+document.addEventListener('keydown',e=>{if(state.lb<0)return;if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')stepLb(-1);if(e.key==='ArrowRight')stepLb(1)});
+
+/* ---------- file picking + drag & drop ---------- */
+$('file').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+$('emptyBtn').onclick=()=>$('file').click();
+let depth=0;
+const hasFiles=e=>e.dataTransfer&&[...e.dataTransfer.types].includes('Files');
+addEventListener('dragenter',e=>{if(hasFiles(e)){depth++;$('drop').classList.add('on')}});
+addEventListener('dragleave',e=>{if(hasFiles(e)){depth=Math.max(0,depth-1);if(!depth)$('drop').classList.remove('on')}});
+addEventListener('dragover',e=>{if(hasFiles(e))e.preventDefault()});
+addEventListener('drop',e=>{if(!hasFiles(e))return;e.preventDefault();depth=0;$('drop').classList.remove('on');addFiles(e.dataTransfer.files)});
+
+/* ---------- start ---------- */
+(async()=>{
+  try{
+    const all=await tx('readonly',s=>s.getAll());
+    state.photos=(all||[]).sort((a,b)=>b.added-a.added);
+  }catch(e){toast('Couldn’t open saved photos in this browser')}
   render();
-}
-
-function deleteAlbum(id) {
-  const album = state.albums.find(a => a.id === id);
-  if (!album) return;
-  if (!confirm(`Delete album "${album.name}"? Photos won't be deleted.`)) return;
-  state.albums = state.albums.filter(a => a.id !== id);
-  state.photos.forEach(p => { p.albumIds = p.albumIds.filter(aid => aid !== id); });
-  if (state.currentView === id) setView('all');
-  save();
-  render();
-  toast('Album deleted');
-}
-
-// ── Move to album ──
-function openMove(photoId) {
-  state.movingPhotoId = photoId;
-  state.selectedAlbumId = null;
-  const photo = state.photos.find(p => p.id === photoId);
-  const list = document.getElementById('albumListSelect');
-
-  if (state.albums.length === 0) {
-    list.innerHTML = '<p style="color:var(--muted);font-size:0.875rem;text-align:center;padding:20px;">No albums yet. Create one first!</p>';
-  } else {
-    list.innerHTML = state.albums.map(a => {
-      const inAlbum = photo?.albumIds.includes(a.id);
-      return `
-      <div class="album-option ${inAlbum ? 'selected' : ''}" onclick="selectAlbumOption('${a.id}', this)" data-id="${a.id}">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-        </svg>
-        ${escHtml(a.name)}
-        ${inAlbum ? '<span style="margin-left:auto;font-size:0.72rem;color:var(--accent);font-weight:700;">✓ Added</span>' : ''}
-      </div>`;
-    }).join('');
-  }
-
-  openModal('moveModal');
-}
-
-function selectAlbumOption(id, el) {
-  state.selectedAlbumId = id;
-  document.querySelectorAll('.album-option').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function confirmMove() {
-  if (!state.movingPhotoId || !state.selectedAlbumId) {
-    closeModal('moveModal');
-    return;
-  }
-  const photo = state.photos.find(p => p.id === state.movingPhotoId);
-  if (photo && !photo.albumIds.includes(state.selectedAlbumId)) {
-    photo.albumIds.push(state.selectedAlbumId);
-    const album = state.albums.find(a => a.id === state.selectedAlbumId);
-    toast(`Added to "${album?.name}"`);
-    save();
-    render();
-  }
-  closeModal('moveModal');
-}
-
-// ── Delete photo ──
-function deletePhoto(id) {
-  if (!confirm('Delete this photo permanently?')) return;
-  state.photos = state.photos.filter(p => p.id !== id);
-  try { localStorage.removeItem(`photo_src_${id}`); } catch(e) {}
-  save();
-  render();
-  toast('Photo deleted');
-}
-
-// ── Lightbox ──
-function openLightbox(idx) {
-  const photos = getViewPhotos();
-  state.lightboxIndex = idx;
-  updateLightbox(photos);
-  document.getElementById('lightbox').classList.add('open');
-}
-
-function updateLightbox(photos) {
-  photos = photos || getViewPhotos();
-  const p = photos[state.lightboxIndex];
-  if (!p) return;
-  document.getElementById('lightboxImg').src = p.src;
-  document.getElementById('lightboxImg').alt = p.name;
-  document.getElementById('lightboxInfo').textContent =
-    `${p.name}  ·  ${String(state.lightboxIndex + 1).padStart(2,'0')} / ${String(photos.length).padStart(2,'0')}`;
-}
-
-function lightboxNav(dir) {
-  const photos = getViewPhotos();
-  state.lightboxIndex = (state.lightboxIndex + dir + photos.length) % photos.length;
-  updateLightbox(photos);
-}
-
-function closeLightbox(e) {
-  if (e.target === document.getElementById('lightbox')) closeLightboxDirect();
-}
-function closeLightboxDirect() {
-  document.getElementById('lightbox').classList.remove('open');
-}
-
-// Keyboard nav
-document.addEventListener('keydown', e => {
-  if (document.getElementById('lightbox').classList.contains('open')) {
-    if (e.key === 'ArrowLeft') lightboxNav(-1);
-    if (e.key === 'ArrowRight') lightboxNav(1);
-    if (e.key === 'Escape') closeLightboxDirect();
-  }
-  if (e.key === 'Escape') {
-    closeModal('albumModal');
-    closeModal('moveModal');
-  }
-});
-
-// ── Modal helpers ──
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function closeOnBackdrop(e, id) { if (e.target === document.getElementById(id)) closeModal(id); }
-
-// ── Toast ──
-function toast(msg) {
-  const el = document.createElement('div');
-  el.className = 'toast';
-  el.textContent = msg;
-  document.getElementById('toastContainer').appendChild(el);
-  setTimeout(() => el.remove(), 3000);
-}
-
-// ── Utils ──
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-
-// ── Init ──
-load();
-initLightboxFilmstrip();
-render();
+})();
+})();
 </script>
 </body>
 </html>
