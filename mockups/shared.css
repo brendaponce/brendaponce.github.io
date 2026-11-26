@@ -1,0 +1,12 @@
+*{box-sizing:border-box;margin:0;padding:0}
+body{-webkit-font-smoothing:antialiased}
+/* soft landscape placeholder: sky, sun, hills (swap for real photos) */
+.ph{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--a) 0%,var(--b) 62%,var(--c) 100%)}
+.ph::before{content:"";position:absolute;width:26%;aspect-ratio:1;border-radius:50%;right:16%;top:14%;background:rgba(255,255,255,.7);filter:blur(6px)}
+.ph::after{content:"";position:absolute;left:-10%;right:-10%;bottom:-38%;height:70%;border-radius:50%;background:var(--d);opacity:.55;box-shadow:40px -10px 0 -4px var(--d)}
+.p1{--a:#cfe6f5;--b:#f6e3dc;--c:#f2cdc4;--d:#9cc3b5}
+.p2{--a:#e4dcf3;--b:#f9e6ea;--c:#f4d3c9;--d:#a9b8d8}
+.p3{--a:#d3eee6;--b:#eaf3e0;--c:#f5ecc9;--d:#8fbfa8}
+.p4{--a:#fbe2cf;--b:#f9d5d0;--c:#e9c3d4;--d:#b9a3c9}
+.p5{--a:#cde3f7;--b:#dfeef6;--c:#f0f0e4;--d:#8eb3cf}
+.p6{--a:#f3e5f0;--b:#d9e6f6;--c:#c9ddea;--d:#95b3c9}
