@@ -1,0 +1,70 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Concept 9 · Black Paper Journal</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--desk:#202023;--page:#0c0c0d;--line:rgba(255,255,255,.075);--ink:#f2f2f2;--ink2:#8b8b92;--tape:rgba(255,46,147,.88);--stamp:#ff2e93;--margin:#ff2e93;--tab:#ff2e93;--tabtxt:#0c0c0d}
+[data-theme=blue]{--tape:rgba(47,139,255,.9);--stamp:#2f8bff;--margin:#2f8bff;--tab:#2f8bff;--tabtxt:#fff}
+[data-theme=white]{--tape:rgba(236,230,214,.88);--stamp:#f2f2f2;--margin:rgba(255,255,255,.55);--tab:#f2f2f2;--tabtxt:#0c0c0d}
+body{font-family:Georgia,'Iowan Old Style',serif;color:var(--ink);min-height:100vh;padding:40px 28px 60px;
+background:radial-gradient(1200px 600px at 50% 0,rgba(255,255,255,.12),transparent 70%),var(--desk)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4  0 0 0 0 .3  0 0 0 0 .2  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.page{position:relative;max-width:1180px;margin:0 auto;padding:34px 46px 56px 86px;background:var(--page);
+background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 31px,var(--line) 31px,var(--line) 32px);
+box-shadow:0 2px 0 rgba(0,0,0,.12),0 26px 50px rgba(0,0,0,.38),inset 0 0 70px rgba(0,0,0,.6);border-radius:3px}
+.page::before{content:"";position:absolute;left:62px;top:0;bottom:0;width:2px;background:var(--margin);opacity:.55}
+.holes{position:absolute;left:18px;top:0;bottom:0;width:22px;display:flex;flex-direction:column;justify-content:space-around;padding:60px 0}
+.holes i{width:20px;height:20px;border-radius:50%;background:var(--desk);box-shadow:inset 0 3px 5px rgba(0,0,0,.45)}
+header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:14px;margin-bottom:22px;border-bottom:3px double var(--ink)}
+.kicker{font:700 11px 'Courier New',monospace;letter-spacing:.28em;text-transform:uppercase;color:var(--ink2)}
+h1{font:700 italic 64px/1 'Bradley Hand','Segoe Script','Brush Script MT','Snell Roundhand',cursive,Georgia;letter-spacing:-.01em;margin-top:6px}
+h1 span{font:400 17px 'Courier New',monospace;letter-spacing:.08em;margin-left:14px;color:var(--ink2);font-style:normal}
+.stamp{width:104px;height:104px;border:3px solid var(--stamp);border-radius:50%;display:grid;place-items:center;text-align:center;color:var(--stamp);
+font:700 12px/1.25 'Courier New',monospace;letter-spacing:.1em;transform:rotate(-11deg);outline:1.5px solid var(--stamp);outline-offset:-9px;opacity:.88}
+.stamp b{font-size:26px;display:block;letter-spacing:0}
+.tabs{display:flex;gap:6px;margin:0 0 30px;align-items:flex-end;flex-wrap:wrap}
+.tabs a{font:700 12px 'Courier New',monospace;letter-spacing:.14em;text-transform:uppercase;padding:9px 16px 7px;background:var(--page);border:2px solid var(--ink);border-bottom:0;border-radius:8px 8px 0 0;color:var(--ink);box-shadow:0 -1px 0 rgba(0,0,0,.05)}
+.tabs a.on{background:var(--tab);color:var(--tabtxt);padding-top:13px}
+.tabs .sp{flex:1;border-bottom:2px solid var(--ink);height:2px;margin-bottom:0}
+.themes{display:flex;gap:8px;margin-left:12px;align-self:center}.themes u{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink);display:block;text-decoration:none}
+.grid{columns:4;column-gap:26px}
+figure{color:#1d1d20;display:inline-block;width:100%;break-inside:avoid;position:relative;background:#fffdf7;padding:11px 11px 12px;margin:0 0 30px;box-shadow:0 1px 2px rgba(0,0,0,.2),0 10px 18px rgba(60,40,10,.25)}
+figure:nth-child(3n+1){transform:rotate(-1.8deg)}figure:nth-child(3n+2){transform:rotate(1.4deg)}figure:nth-child(3n){transform:rotate(-.4deg)}
+figure:nth-child(4n+2)::before{content:"";position:absolute;top:-13px;left:50%;width:84px;height:26px;margin-left:-42px;background:var(--tape);transform:rotate(-3deg);box-shadow:0 1px 3px rgba(0,0,0,.2);
+-webkit-mask:repeating-linear-gradient(90deg,#000 0 6px,transparent 6px 7px);mask:none;clip-path:polygon(0 8%,3% 0,6% 10%,9% 0,100% 0,97% 50%,100% 100%,6% 100%,3% 88%,0 100%)}
+figure:not(:nth-child(4n+2))::before{content:"";position:absolute;top:-10px;left:-12px;width:62px;height:22px;background:var(--tape);transform:rotate(-36deg);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+figcaption{font:italic 700 17px/1.1 'Bradley Hand','Segoe Script','Brush Script MT',cursive,Georgia;padding:10px 4px 0;display:flex;justify-content:space-between;align-items:baseline}
+figcaption small{font:700 10px 'Courier New',monospace;letter-spacing:.12em;color:#77777e;font-style:normal}
+.ph{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--a),var(--b) 64%,var(--c))}
+.ph::before{content:"";position:absolute;width:24%;aspect-ratio:1;border-radius:50%;right:15%;top:13%;background:var(--s,#fff3c4);opacity:.95}
+.ph::after{content:"";position:absolute;left:-12%;right:-12%;bottom:-36%;height:68%;border-radius:50%;background:var(--d);box-shadow:46px -12px 0 -2px var(--d2)}
+.p1{--a:#2f7fb5;--b:#f2a65a;--c:#e4572e;--d:#2b4a3f;--d2:#3b6a56}
+.p2{--a:#6b3fa0;--b:#e0669f;--c:#f7a072;--d:#2a2a5c;--d2:#41418c;--s:#ffe1b8}
+.p3{--a:#17a398;--b:#9be564;--c:#f6e27a;--d:#14614f;--d2:#1d8a6f}
+.p4{--a:#ff7b54;--b:#ffb26b;--c:#ffd56b;--d:#7a2e4d;--d2:#a3416b}
+.p5{--a:#1b4965;--b:#5fa8d3;--c:#cae9ff;--d:#0f2e45;--d2:#1d5a85;--s:#fff}
+.p6{--a:#f4b6c2;--b:#d4a5e8;--c:#7f8cf0;--d:#3a2d73;--d2:#5646a8}
+.h1{height:150px}.h2{height:210px}.h3{height:270px}
+</style></head><body>
+<div class="page"><div class="holes"><i></i><i></i><i></i><i></i><i></i></div>
+<header><div><div class="kicker">Photo journal · Vol. 12 · 2026</div><h1>Zephyra<span>— all the days, one page</span></h1></div>
+<div class="stamp"><div>EST.<b>2418</b>PHOTOS</div></div></header>
+<nav class="tabs"><a class="on">All</a><a>Travel</a><a>Family</a><a>Nature</a><a>Friends</a><a>2026</a><div class="sp"></div>
+<div class="themes" title="theme"><u style="background:#ff2e93"></u><u style="background:#2f8bff"></u><u style="background:#f2f2f2"></u></div></nav>
+<div class="grid">
+<figure><div class="ph p1 h3"></div><figcaption>Sintra at dusk<small>04.12</small></figcaption></figure>
+<figure><div class="ph p3 h1"></div><figcaption>Garden walk<small>04.09</small></figcaption></figure>
+<figure><div class="ph p5 h2"></div><figcaption>Coast road<small>04.07</small></figcaption></figure>
+<figure><div class="ph p2 h1"></div><figcaption>Late bloom<small>04.02</small></figcaption></figure>
+<figure><div class="ph p4 h2"></div><figcaption>Market, 6am<small>03.28</small></figcaption></figure>
+<figure><div class="ph p6 h3"></div><figcaption>Lavender hour<small>03.21</small></figcaption></figure>
+<figure><div class="ph p1 h1"></div><figcaption>Rooftops<small>03.18</small></figcaption></figure>
+<figure><div class="ph p3 h3"></div><figcaption>Fern trail<small>03.11</small></figcaption></figure>
+<figure><div class="ph p2 h2"></div><figcaption>Sunday supper<small>03.03</small></figcaption></figure>
+<figure><div class="ph p5 h1"></div><figcaption>Low tide<small>02.25</small></figcaption></figure>
+<figure><div class="ph p4 h3"></div><figcaption>Golden wall<small>02.19</small></figcaption></figure>
+<figure><div class="ph p6 h2"></div><figcaption>First snow<small>02.07</small></figcaption></figure>
+</div></div>
+<script>const t=new URLSearchParams(location.search).get('theme');if(t)document.body.parentElement.dataset.theme=t;
+document.querySelectorAll('.themes u').forEach((u,i)=>u.onclick=()=>document.documentElement.dataset.theme=['pink','blue','white'][i]);</script>
+</body></html>
