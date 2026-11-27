@@ -1,1 +1,166 @@
-Hello World
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Zephyra</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#000000">
+<style>
+@font-face{font-family:'Jost';font-weight:200;font-display:swap;src:url(fonts/jost-latin-200-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-weight:300;font-display:swap;src:url(fonts/jost-latin-300-normal.woff2) format('woff2')}
+@font-face{font-family:'Jost';font-weight:400;font-display:swap;src:url(fonts/jost-latin-400-normal.woff2) format('woff2')}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--pink:#ff2e93;--grey:#8c8c8c;--font:'Jost','Futura','Century Gothic','Avenir Next',sans-serif}
+html{background:#000}
+body{background:#000;color:#fff;font-family:var(--font);font-weight:300;min-height:100vh;-webkit-font-smoothing:antialiased}
+header{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:34px 40px 30px;max-width:1640px;margin:0 auto}
+h1{font-weight:200;font-size:clamp(34px,5.2vw,64px);line-height:1;letter-spacing:.22em;color:var(--pink);margin-right:-.22em}
+.add{font:300 12px var(--font);letter-spacing:.3em;text-transform:uppercase;color:#fff;background:none;border:1px solid #3a3a3a;padding:13px 22px;cursor:pointer;transition:border-color .2s}
+.add:hover,.add:focus-visible{border-color:#fff;outline:none}
+main{max-width:1640px;margin:0 auto;padding:0 40px 90px}
+.grid{columns:3;column-gap:16px}
+.tile{display:inline-block;width:100%;break-inside:avoid;margin:0 0 30px;position:relative}
+.tile img{display:block;width:100%;height:auto;cursor:zoom-in;background:#0d0d0d}
+.cap{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding-top:12px}
+.t{font-weight:300;font-size:12px;letter-spacing:.22em;text-transform:uppercase;outline:none;flex:1;min-width:3ch;word-break:break-word;cursor:text;border-bottom:1px solid transparent}
+.t:hover,.t:focus{border-bottom-color:#444}
+.t:empty::before{content:"Add a title";color:#555}
+.d{font-weight:200;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--grey);flex:none}
+.x{position:absolute;top:10px;right:10px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(255,255,255,.7);background:rgba(0,0,0,.55);color:#fff;font:300 14px var(--font);cursor:pointer;opacity:0;transition:opacity .15s}
+.tile:hover .x,.x:focus-visible{opacity:1}
+.x:hover{background:#fff;color:#000}
+@media (hover:none){.x{opacity:.85}}
+.empty{display:none;text-align:center;padding:16vh 20px;color:var(--grey)}
+.empty.on{display:block}
+.empty p{font-weight:200;font-size:15px;letter-spacing:.3em;text-transform:uppercase;line-height:2;margin-bottom:26px}
+.empty .add{color:#fff}
+.drop{position:fixed;inset:14px;z-index:90;display:none;place-items:center;border:1px dashed #fff;background:rgba(0,0,0,.88);font-weight:200;font-size:20px;letter-spacing:.35em;text-transform:uppercase}
+.drop.on{display:grid}
+.lb{position:fixed;inset:0;z-index:80;display:none;background:#000;flex-direction:column;align-items:center;justify-content:center;padding:34px 80px}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:calc(100vh - 130px);width:auto;height:auto;display:block}
+.lb .cap{width:100%;justify-content:center;gap:24px}
+.lb .btn{position:fixed;background:none;border:0;color:#fff;font:200 34px var(--font);cursor:pointer;padding:16px;opacity:.7}
+.lb .btn:hover{opacity:1}
+.lb .close{top:14px;right:20px;font-size:26px}.lb .prev{left:14px;top:50%;transform:translateY(-50%)}.lb .next{right:14px;top:50%;transform:translateY(-50%)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:95;background:#fff;color:#000;padding:11px 20px;font-weight:400;font-size:11px;letter-spacing:.24em;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+@media (max-width:1100px){.grid{columns:2}}
+@media (max-width:640px){header{padding:24px 20px 22px}main{padding:0 20px 70px}.grid{columns:1}.add{padding:11px 14px;letter-spacing:.2em}.lb{padding:50px 14px 20px}.lb .prev,.lb .next{top:auto;bottom:6px;transform:none}}
+</style>
+</head>
+<body>
+<header>
+  <h1>ZEPHYRA</h1>
+  <button class="add" id="add" type="button">+ Add photos</button>
+</header>
+<main>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="empty"><p>Drop photos here<br>or</p><button class="add" id="add2" type="button">+ Add photos</button></div>
+</main>
+<input type="file" id="file" accept="image/*" multiple hidden>
+<div class="drop" id="drop">Drop to add</div>
+<div class="lb" id="lb">
+  <button class="btn close" id="lbX" aria-label="Close">✕</button>
+  <button class="btn prev" id="lbPrev" aria-label="Previous">←</button>
+  <img id="lbImg" alt="">
+  <div class="cap"><span class="t" id="lbT" style="flex:none;cursor:default"></span><span class="d" id="lbD"></span></div>
+  <button class="btn next" id="lbNext" aria-label="Next">→</button>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+
+/* ---- storage: photos live in this browser (IndexedDB), nothing is uploaded anywhere ---- */
+const dbp=new Promise((res,rej)=>{const r=indexedDB.open('zephyra-journal',1);r.onupgradeneeded=()=>r.result.createObjectStore('photos',{keyPath:'id'});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function tx(mode,fn){const db=await dbp;return new Promise((res,rej)=>{const t=db.transaction('photos',mode);let out;try{out=fn(t.objectStore('photos'))}catch(e){return rej(e)}t.oncomplete=()=>res(out&&out.result);t.onerror=()=>rej(t.error);t.onabort=()=>rej(t.error)})}
+
+let photos=[],lb=-1;
+const urls=new Map();
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const urlOf=p=>{if(!urls.has(p.id))urls.set(p.id,URL.createObjectURL(p.blob));return urls.get(p.id)};
+const fmt=iso=>{const d=new Date(iso);return isNaN(d)?'':d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})};
+let tT;function toast(m){const t=$('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2400)}
+
+/* ---- adding photos: keep them large and sharp (long edge up to 3000px, high-quality JPEG) ---- */
+const MAX=3000,QUALITY=.93;
+async function prepare(file){
+  const bmp=await createImageBitmap(file);
+  const k=Math.min(1,MAX/Math.max(bmp.width,bmp.height));
+  if(k===1&&file.size<6*1024*1024&&/jpe?g|webp|png/i.test(file.type)){if(bmp.close)bmp.close();return file}   // already a sensible size: keep the original untouched
+  const c=document.createElement('canvas');c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+  const x=c.getContext('2d');x.imageSmoothingQuality='high';x.drawImage(bmp,0,0,c.width,c.height);
+  if(bmp.close)bmp.close();
+  return new Promise((res,rej)=>c.toBlob(b=>b?res(b):rej(new Error('encode')),'image/jpeg',QUALITY));
+}
+async function addFiles(list){
+  const files=[...list].filter(f=>f.type.startsWith('image/'));
+  if(!files.length){toast('Those are not images');return}
+  let ok=0,bad=0;
+  for(const f of files){
+    try{
+      const blob=await prepare(f);
+      const p={id:uid(),blob,title:f.name.replace(/\.[^.]+$/,'').replace(/[_-]+/g,' ').slice(0,60),date:new Date(f.lastModified||Date.now()).toISOString(),added:Date.now()};
+      await tx('readwrite',s=>s.put(p));photos.unshift(p);ok++;
+    }catch(e){bad++}
+  }
+  photos.sort((a,b)=>b.added-a.added);render();
+  toast(ok?'Added '+ok+' photo'+(ok>1?'s':'')+(bad?' · '+bad+' failed':''):'Could not read those files');
+}
+
+/* ---- wall ---- */
+function render(){
+  const grid=$('grid');grid.innerHTML='';
+  photos.forEach((p,i)=>grid.appendChild(tile(p,i)));
+  $('empty').classList.toggle('on',!photos.length);
+}
+function tile(p,i){
+  const f=document.createElement('figure');f.className='tile';
+  const img=document.createElement('img');img.src=urlOf(p);img.alt=p.title||'Photo';img.decoding='async';img.loading=i<9?'eager':'lazy';img.onclick=()=>openLb(i);f.appendChild(img);
+  const cap=document.createElement('div');cap.className='cap';
+  const t=document.createElement('span');t.className='t';t.contentEditable='true';t.spellcheck=false;t.textContent=p.title;
+  t.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();t.blur()}};
+  t.onblur=()=>{const v=t.textContent.trim().slice(0,60);t.textContent=v;if(v!==p.title){p.title=v;tx('readwrite',s=>s.put(p))}};
+  const d=document.createElement('span');d.className='d';d.textContent=fmt(p.date);
+  cap.append(t,d);f.appendChild(cap);
+  const x=document.createElement('button');x.type='button';x.className='x';x.textContent='✕';x.title='Delete photo';x.setAttribute('aria-label','Delete photo');x.onclick=()=>del(p);f.appendChild(x);
+  return f;
+}
+async function del(p){
+  if(!confirm('Delete this photo for good?'))return;
+  await tx('readwrite',s=>s.delete(p.id));
+  photos=photos.filter(q=>q.id!==p.id);
+  if(urls.has(p.id)){URL.revokeObjectURL(urls.get(p.id));urls.delete(p.id)}
+  render();toast('Deleted');
+}
+
+/* ---- full-screen viewer ---- */
+function openLb(i){lb=i;showLb();$('lb').classList.add('on');document.body.style.overflow='hidden'}
+function showLb(){const p=photos[lb];if(!p)return closeLb();$('lbImg').src=urlOf(p);$('lbImg').alt=p.title;$('lbT').textContent=p.title;$('lbD').textContent=fmt(p.date)}
+function closeLb(){$('lb').classList.remove('on');document.body.style.overflow='';lb=-1}
+function step(d){if(!photos.length)return;lb=(lb+d+photos.length)%photos.length;showLb()}
+$('lbX').onclick=closeLb;$('lbPrev').onclick=()=>step(-1);$('lbNext').onclick=()=>step(1);
+$('lb').onclick=e=>{if(e.target===$('lb'))closeLb()};
+document.addEventListener('keydown',e=>{if(lb<0)return;if(e.key==='Escape')closeLb();if(e.key==='ArrowLeft')step(-1);if(e.key==='ArrowRight')step(1)});
+
+/* ---- pick or drop files ---- */
+$('add').onclick=$('add2').onclick=()=>$('file').click();
+$('file').onchange=e=>{addFiles(e.target.files);e.target.value=''};
+let depth=0;const has=e=>e.dataTransfer&&[...e.dataTransfer.types].includes('Files');
+addEventListener('dragenter',e=>{if(has(e)){depth++;$('drop').classList.add('on')}});
+addEventListener('dragleave',e=>{if(has(e)){depth=Math.max(0,depth-1);if(!depth)$('drop').classList.remove('on')}});
+addEventListener('dragover',e=>{if(has(e))e.preventDefault()});
+addEventListener('drop',e=>{if(!has(e))return;e.preventDefault();depth=0;$('drop').classList.remove('on');addFiles(e.dataTransfer.files)});
+
+/* ---- start ---- */
+(async()=>{
+  try{photos=((await tx('readonly',s=>s.getAll()))||[]).sort((a,b)=>b.added-a.added)}catch(e){toast('Could not open saved photos in this browser')}
+  render();
+})();
+})();
+</script>
+</body>
+</html>

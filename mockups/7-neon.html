@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Concept 7 · Neon</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#07070b;--card:#101018;--line:#23232f;--text:#f4f4f8;--mute:#8a8a9c;--a:#ff2e93;--b:#2f6bff;--glow:rgba(255,46,147,.55)}
+[data-theme=blue]{--a:#2f8bff;--b:#00e5ff;--glow:rgba(47,139,255,.55)}
+[data-theme=lime]{--a:#c6ff3d;--b:#00e0a4;--glow:rgba(198,255,61,.45)}
+body{background:var(--bg);color:var(--text);font-family:'Inter','Helvetica Neue','Segoe UI',system-ui,sans-serif;min-height:100vh;
+background-image:radial-gradient(700px 380px at 12% -8%,color-mix(in srgb,var(--a) 22%,transparent),transparent 70%),radial-gradient(700px 400px at 92% 0,color-mix(in srgb,var(--b) 20%,transparent),transparent 70%)}
+nav{position:sticky;top:0;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:18px 44px;background:rgba(7,7,11,.7);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.logo{font-weight:800;font-size:20px;letter-spacing:-.04em}.logo i{font-style:normal;color:var(--a);text-shadow:0 0 14px var(--glow)}
+nav .links{display:flex;gap:30px;font-size:13px;color:var(--mute);letter-spacing:.02em}.links .on{color:var(--text)}
+.up{font-weight:600;font-size:13px;padding:10px 20px;border-radius:999px;background:var(--a);color:#07070b;box-shadow:0 0 24px var(--glow)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 44px 70px}
+.hero{padding:74px 0 34px}
+.hero small{display:block;font:500 12px ui-monospace,'SF Mono','Courier New',monospace;letter-spacing:.2em;color:var(--a);text-transform:uppercase}
+.hero h1{display:inline-block;font-weight:800;font-size:92px;line-height:.95;letter-spacing:-.055em;margin-top:16px;background:linear-gradient(90deg,var(--text) 0%,var(--text) 34%,var(--a) 62%,var(--b) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.meta{display:flex;justify-content:space-between;align-items:center;margin:34px 0 28px;padding-top:20px;border-top:1px solid var(--line);flex-wrap:wrap;gap:14px}
+.pills{display:flex;gap:10px}
+.pills a{font-size:13px;font-weight:500;padding:9px 18px;border-radius:999px;border:1px solid var(--line);color:var(--mute)}
+.pills a.on{border-color:var(--a);color:var(--text);box-shadow:0 0 18px var(--glow),inset 0 0 14px color-mix(in srgb,var(--a) 18%,transparent)}
+.count{font:500 12px ui-monospace,'Courier New',monospace;color:var(--mute);letter-spacing:.1em}.count b{color:var(--b);text-shadow:0 0 10px color-mix(in srgb,var(--b) 70%,transparent)}
+.grid{columns:4;column-gap:16px}
+.tile{display:inline-block;width:100%;break-inside:avoid;margin-bottom:16px;position:relative;border-radius:16px;overflow:hidden;background:var(--card);border:1px solid var(--line)}
+.tile .ph{width:100%}
+.tile .cap{position:absolute;left:0;right:0;bottom:0;padding:34px 16px 14px;background:linear-gradient(180deg,transparent,rgba(5,5,10,.82));display:flex;justify-content:space-between;align-items:flex-end}
+.cap b{font-weight:600;font-size:14px;letter-spacing:-.01em}.cap span{font:500 11px ui-monospace,'Courier New',monospace;color:#c7c7d6;letter-spacing:.08em}
+.tile.hot{border-color:var(--a);box-shadow:0 0 0 1px var(--a),0 0 32px var(--glow),0 0 70px color-mix(in srgb,var(--a) 25%,transparent)}
+.tile.cool{border-color:var(--b);box-shadow:0 0 0 1px var(--b),0 0 30px color-mix(in srgb,var(--b) 55%,transparent)}
+.tag{position:absolute;top:12px;left:12px;font:600 10px ui-monospace,monospace;letter-spacing:.14em;text-transform:uppercase;padding:5px 10px;border-radius:999px;background:var(--a);color:#07070b}
+.heart{position:absolute;top:10px;right:12px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(7,7,11,.6);backdrop-filter:blur(6px);color:var(--a);font-size:14px;text-shadow:0 0 10px var(--glow)}
+.ph{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--c1),var(--c2))}
+.ph::before{content:"";position:absolute;width:24%;aspect-ratio:1;border-radius:50%;right:15%;top:13%;background:var(--s,#fff);box-shadow:0 0 40px var(--s,#fff)}
+.ph::after{content:"";position:absolute;left:-12%;right:-12%;bottom:-36%;height:68%;border-radius:50%;background:var(--d);box-shadow:46px -12px 0 -2px var(--d2)}
+.n1{--c1:#ff2e93;--c2:#ffb199;--s:#fff1a8;--d:#1b1033;--d2:#2c1a55}
+.n2{--c1:#0a1a4d;--c2:#2f6bff;--s:#7ffcff;--d:#05071c;--d2:#0b1140}
+.n3{--c1:#7a2cff;--c2:#ff4fd8;--s:#ffe36e;--d:#14072c;--d2:#2a0f55}
+.n4{--c1:#00c2ff;--c2:#b6fff2;--s:#fff;--d:#032a4a;--d2:#054878}
+.n5{--c1:#ff7a18;--c2:#ff2e93;--s:#fff3b0;--d:#2a0a2e;--d2:#4a1050}
+.n6{--c1:#0b0b1f;--c2:#3a1b8f;--s:#ff2e93;--d:#000;--d2:#12082e}
+.h1{height:150px}.h2{height:230px}.h3{height:310px}
+</style></head><body>
+<nav><div class="logo">zephyra<i>.</i></div><div class="links"><span class="on">Photos</span><span>Albums</span><span>Favorites</span><span>Map</span></div><div class="up">＋ Upload</div></nav>
+<div class="wrap">
+<section class="hero"><small>2,418 photos · 36 albums</small><h1>Everything.<br>One page.</h1></section>
+<div class="meta"><div class="pills"><a class="on">All</a><a>Travel</a><a>Family</a><a>Nature</a><a>Friends</a><a>2026</a></div><div class="count"><b>12</b> OF 2,418 SHOWN · SORT: NEWEST</div></div>
+<div class="grid">
+<div class="tile hot"><span class="tag">New</span><div class="ph n1 h3"></div><div class="cap"><b>Sintra at dusk</b><span>04.12</span></div></div>
+<div class="tile"><div class="ph n2 h1"></div><div class="cap"><b>Garden walk</b><span>04.09</span></div></div>
+<div class="tile"><div class="ph n3 h2"></div><div class="cap"><b>Coast road</b><span>04.07</span></div></div>
+<div class="tile cool"><span class="heart">♥</span><div class="ph n4 h3"></div><div class="cap"><b>Low tide</b><span>02.25</span></div></div>
+<div class="tile"><div class="ph n5 h2"></div><div class="cap"><b>Market, 6am</b><span>03.28</span></div></div>
+<div class="tile"><div class="ph n6 h2"></div><div class="cap"><b>Late bloom</b><span>04.02</span></div></div>
+<div class="tile"><div class="ph n1 h1"></div><div class="cap"><b>Rooftops</b><span>03.18</span></div></div>
+<div class="tile"><div class="ph n4 h2"></div><div class="cap"><b>Fern trail</b><span>03.11</span></div></div>
+<div class="tile"><div class="ph n2 h3"></div><div class="cap"><b>Lavender hour</b><span>03.21</span></div></div>
+<div class="tile"><div class="ph n3 h2"></div><div class="cap"><b>Sunday supper</b><span>03.03</span></div></div>
+<div class="tile"><div class="ph n5 h3"></div><div class="cap"><b>Golden wall</b><span>02.19</span></div></div>
+<div class="tile"><div class="ph n6 h2"></div><div class="cap"><b>First snow</b><span>02.07</span></div></div>
+</div></div>
+<script>const t=new URLSearchParams(location.search).get('theme');if(t)document.documentElement.dataset.theme=t;</script>
+</body></html>

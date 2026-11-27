@@ -1,0 +1,55 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>Concept 5 · Gazette</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--paper:#e8e1cf;--ink:#171512;--red:#d4352a;--mute:#6d675a}
+body{background:#cfc7b2;padding:36px 24px 60px;font-family:Georgia,'Times New Roman',serif;color:var(--ink)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.4;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/><feColorMatrix values='0 0 0 0 .3  0 0 0 0 .25  0 0 0 0 .15  0 0 0 .5 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+.sheet{position:relative;max-width:1180px;margin:0 auto;background:var(--paper);padding:30px 40px 50px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.top{display:flex;justify-content:space-between;font:700 11px 'Courier New',monospace;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid var(--ink);padding-bottom:8px}
+.mast{text-align:center;padding:14px 0 6px;border-bottom:4px double var(--ink)}
+.mast h1{font:900 82px/1 'Times New Roman',Georgia,serif;letter-spacing:-.01em;text-transform:none}
+.mast h1 i{color:var(--red);font-style:normal}
+.mast p{font:italic 14px Georgia;color:var(--mute);margin:6px 0 10px}
+.bar{display:flex;justify-content:center;gap:34px;border-bottom:2px solid var(--ink);padding:9px 0;font:700 12px 'Courier New',monospace;letter-spacing:.2em;text-transform:uppercase}
+.bar a.on{background:var(--ink);color:var(--paper);padding:2px 10px;margin:-2px 0}
+.lead{column-span:all;display:grid;grid-template-columns:1.6fr 1fr;gap:26px;padding:22px 0;border-bottom:1px solid var(--ink);margin-bottom:22px}
+.lead h2{font:900 46px/1.02 Georgia;margin:6px 0 12px}
+.kick{font:700 11px 'Courier New',monospace;letter-spacing:.2em;color:var(--red);text-transform:uppercase}
+.lead p{font-size:15px;line-height:1.55;column-count:2;column-gap:20px;text-align:justify;hyphens:auto}
+.lead p::first-letter{font:900 44px/.8 Georgia;float:left;padding:4px 6px 0 0}
+.cols{columns:4;column-gap:30px;column-rule:1px solid rgba(23,21,18,.55)}
+article{break-inside:avoid;display:inline-block;width:100%;margin-bottom:26px}
+article h3{font:900 21px/1.08 Georgia;margin:10px 0 4px}
+article .by{font:700 10px 'Courier New',monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--mute);margin-bottom:6px}
+article p{font-size:13px;line-height:1.45;text-align:justify}
+.ht{position:relative}
+.ht .ph{filter:grayscale(1) contrast(1.35) brightness(.98)}
+.ht.spot .ph{filter:sepia(.25) saturate(1.1) contrast(1.15)}
+.ht::after{content:"";position:absolute;inset:0;background:radial-gradient(rgba(0,0,0,.5) 1px,transparent 1.5px) 0 0/4px 4px;mix-blend-mode:multiply;opacity:.55}
+.ht.spot::after{opacity:.25}
+.cap{font:italic 11px Georgia;color:var(--mute);margin-top:5px;border-top:1px solid var(--ink);padding-top:3px}
+.ph{position:relative;overflow:hidden;background:linear-gradient(180deg,var(--a),var(--b) 64%,var(--c))}
+.ph::before{content:"";position:absolute;width:24%;aspect-ratio:1;border-radius:50%;right:15%;top:13%;background:var(--s,#fff3c4)}
+.ph::after{content:"";position:absolute;left:-12%;right:-12%;bottom:-36%;height:68%;border-radius:50%;background:var(--d);box-shadow:46px -12px 0 -2px var(--d2)}
+.p1{--a:#2f7fb5;--b:#f2a65a;--c:#e4572e;--d:#2b4a3f;--d2:#3b6a56}.p2{--a:#6b3fa0;--b:#e0669f;--c:#f7a072;--d:#2a2a5c;--d2:#41418c}
+.p3{--a:#17a398;--b:#9be564;--c:#f6e27a;--d:#14614f;--d2:#1d8a6f}.p4{--a:#ff7b54;--b:#ffb26b;--c:#ffd56b;--d:#7a2e4d;--d2:#a3416b}
+.p5{--a:#1b4965;--b:#5fa8d3;--c:#cae9ff;--d:#0f2e45;--d2:#1d5a85;--s:#fff}.p6{--a:#f4b6c2;--b:#d4a5e8;--c:#7f8cf0;--d:#3a2d73;--d2:#5646a8}
+.h1{height:130px}.h2{height:190px}.h3{height:250px}.hl{height:340px}
+</style></head><body><div class="sheet">
+<div class="top"><span>Vol. XII · No. 418</span><span>Thursday, April 16, 2026</span><span>Price: One Memory</span></div>
+<div class="mast"><h1>The Zephyra <i>Gazette</i></h1><p>“All the news that’s fit to frame” — 2,418 photographs and counting</p></div>
+<nav class="bar"><a class="on">Front Page</a><a>Travel</a><a>Family</a><a>Nature</a><a>Friends</a><a>Archive</a></nav>
+<div class="cols">
+<div class="lead"><div class="ht spot"><div class="ph p1 hl"></div><div class="cap">Dusk settles over the hills of Sintra, Portugal. — Photo: Zephyra</div></div>
+<div><div class="kick">Top Story · Travel</div><h2>Golden Hour Returns To Sintra</h2><p>Residents reported unusually warm light across the western ridge on Sunday evening, drawing crowds with cameras. Our correspondent was on the hill with a thermos and a lens cap, and filed this dispatch with twelve photographs from the scene. Light held for forty minutes before fading to violet.</p></div></div>
+<article><div class="ht"><div class="ph p3 h2"></div></div><div class="cap">Fern trail, March.</div><h3>Garden Walk Draws Early Crowd</h3><div class="by">By the Editors · 04.09</div><p>Green returned to the lower paths this week, and not quietly.</p></article>
+<article><div class="ht spot"><div class="ph p4 h3"></div></div><h3>Market Opens At Six; Oranges Lead</h3><div class="by">Local · 03.28</div><p>Early risers were rewarded with warm light and cheaper citrus.</p></article>
+<article><div class="ht"><div class="ph p5 h1"></div></div><h3>Low Tide Reveals Quiet Coast</h3><div class="by">Nature · 02.25</div></article>
+<article><div class="ht"><div class="ph p2 h2"></div></div><div class="cap">Sunday supper, the long table.</div><h3>Family Dinner Runs Long</h3><div class="by">Home · 03.03</div><p>Reports of second helpings, third stories and no clear end.</p></article>
+<article><div class="ht"><div class="ph p6 h3"></div></div><h3>Lavender Hour Declared Best Of Season</h3><div class="by">Nature · 03.21</div><p>Critics call the violet sky “unfairly good.”</p></article>
+<article><div class="ht spot"><div class="ph p1 h1"></div></div><h3>Rooftops Basking</h3><div class="by">City · 03.18</div></article>
+<article><div class="ht"><div class="ph p3 h3"></div></div><h3>Weather: Mostly Hills, Chance Of Sun</h3><div class="by">Outlook · 02.19</div><p>Forecasters expect continued photogenic conditions through the weekend.</p></article>
+<article><div class="ht"><div class="ph p2 h1"></div></div><h3>Late Bloom Surprises Gardeners</h3><div class="by">Garden · 04.02</div></article>
+<article><div class="ht"><div class="ph p4 h2"></div></div><div class="cap">Golden wall, seen from the lane.</div><h3>First Snow, Briefly</h3><div class="by">Winter · 02.07</div></article>
+</div></div></body></html>
