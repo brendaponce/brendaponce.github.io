@@ -12,16 +12,22 @@ const jost = localFont({
   display: "swap",
 });
 
+const oliver = localFont({
+  src: "./fonts/oliver/oliver__.ttf",
+  variable: "--font-oliver",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
-  title: "Zephyra",
+  title: "Nectar",
   description: "Photographs.",
-  openGraph: { title: "Zephyra", description: "Photographs.", type: "website" },
+  openGraph: { title: "Nectar", description: "Photographs.", type: "website" },
 };
 export const viewport: Viewport = { themeColor: "#000000" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={jost.variable}>
+    <html lang="en" className={`${jost.variable} ${oliver.variable}`}>
       <body>{children}</body>
     </html>
   );

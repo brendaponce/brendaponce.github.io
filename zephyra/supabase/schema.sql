@@ -4,6 +4,7 @@
 create table if not exists public.photos (
   id          uuid primary key,
   title       text        not null default '',
+  location    text        not null default '',
   taken_at    timestamptz not null default now(),
   created_at  timestamptz not null default now(),
   width       integer     not null,
@@ -12,9 +13,19 @@ create table if not exists public.photos (
   thumb_path  text        not null
 );
 
+-- If you created the table before locations existed, run this one line too:
+alter table public.photos add column if not exists location text not null default '';
+
 -- Lock the table down. The website talks to it only from the server (with the secret
 -- service key), so nobody on the internet can read or change it directly.
 alter table public.photos enable row level security;
+
+-- Site settings (social links). One row per setting, only the server can touch it.
+create table if not exists public.settings (
+  key    text primary key,
+  value  jsonb not null default '{}'::jsonb
+);
+alter table public.settings enable row level security;
 
 -- 2) The storage bucket for the photo files. Public = anyone can view a photo if they
 --    have its link (that is how the website shows them). Only the server can add/delete.

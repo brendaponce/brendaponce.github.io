@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import type { Photo } from "@/lib/types";
 
 const fmt = (iso: string) =>
-  new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+  new Date(iso).toLocaleDateString("en-GB", { month: "long", year: "numeric", timeZone: "UTC" });
 
 export default function Gallery({ photos }: { photos: Photo[] }) {
   const [open, setOpen] = useState<number | null>(null);

@@ -48,12 +48,13 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Bad size" }, { status: 400 });
   }
   const title = String(form.get("title") ?? "").trim().slice(0, 80);
+  const location = String(form.get("location") ?? "").trim().slice(0, 80);
   const t = new Date(String(form.get("takenAt") ?? ""));
   const takenAt = (isNaN(t.getTime()) ? new Date() : t).toISOString();
 
   try {
     const store = getStore();
-    const rec = await store.add({ title, takenAt, width, height }, full, thumb);
+    const rec = await store.add({ title, location, takenAt, width, height }, full, thumb);
     return NextResponse.json(toPhoto(store, rec), { status: 201 });
   } catch (e) {
     console.error("upload failed", e);

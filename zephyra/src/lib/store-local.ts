@@ -1,7 +1,8 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
-import type { NewPhoto, PhotoRecord, Store } from "./types";
+import { cleanSocials } from "./socials";
+import type { NewPhoto, PhotoRecord, Settings, Store } from "./types";
 
 /**
  * Development storage: files and a small JSON index in the `.data` folder.
@@ -12,6 +13,7 @@ export function createLocalStore(): Store {
   const root = process.env.DATA_DIR || path.join(process.cwd(), ".data");
   const filesDir = path.join(root, "files");
   const indexFile = path.join(root, "photos.json");
+  const settingsFile = path.join(root, "settings.json");
 
   // Run read-modify-write operations one after another so two uploads can't clobber each other.
   let queue: Promise<unknown> = Promise.resolve();
@@ -23,7 +25,8 @@ export function createLocalStore(): Store {
 
   async function readIndex(): Promise<PhotoRecord[]> {
     try {
-      return JSON.parse(await fs.readFile(indexFile, "utf8")) as PhotoRecord[];
+      const items = JSON.parse(await fs.readFile(indexFile, "utf8")) as PhotoRecord[];
+      return items.map((r) => ({ ...r, location: r.location ?? "" })); // older entries have no location
     } catch {
       return [];
     }
@@ -61,7 +64,8 @@ export function createLocalStore(): Store {
         const items = await readIndex();
         const rec = items.find((p) => p.id === id);
         if (!rec) return null;
-        rec.title = patch.title;
+        if (patch.title !== undefined) rec.title = patch.title;
+        if (patch.location !== undefined) rec.location = patch.location;
         await writeIndex(items);
         return rec;
       }),
@@ -75,6 +79,22 @@ export function createLocalStore(): Store {
           [rec.fullKey, rec.thumbKey].map((k) => fs.rm(path.join(filesDir, k), { force: true })),
         );
         return true;
+      }),
+    async getSettings(): Promise<Settings> {
+      try {
+        const raw = JSON.parse(await fs.readFile(settingsFile, "utf8")) as { socials?: Record<string, unknown> };
+        return { socials: cleanSocials(raw.socials) };
+      } catch {
+        return { socials: cleanSocials(undefined) };
+      }
+    },
+    saveSettings: (settings) =>
+      serial(async () => {
+        await fs.mkdir(root, { recursive: true });
+        const tmp = settingsFile + ".tmp";
+        await fs.writeFile(tmp, JSON.stringify(settings, null, 2));
+        await fs.rename(tmp, settingsFile);
+        return settings;
       }),
     urlFor: (key) => `/api/files/${key}`,
   };

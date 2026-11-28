@@ -1,0 +1,12 @@
+.col{position:relative;width:100%;height:100vh;height:100svh;overflow:hidden;background:#000;color:#ffff4d;font-family:var(--font-rothwell),var(--font);text-transform:uppercase}
+.col .shard{position:absolute;inset:0;background-size:cover;background-position:center}
+.col .cuts{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.col .cuts line{stroke:#000;stroke-width:6;vector-effect:non-scaling-stroke}
+.col .mark{position:absolute;left:50%;top:50%;width:clamp(150px,24vw,360px);aspect-ratio:1;transform:translate(-50%,-50%);fill:#ffff4d;filter:drop-shadow(0 0 30px rgba(0,0,0,.25))}
+.col .top{position:absolute;left:0;right:0;top:0;display:flex;justify-content:space-between;padding:clamp(18px,3vw,44px);font-size:clamp(20px,3.4vw,52px);line-height:1}
+.col .bottom{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;align-items:flex-end;padding:clamp(18px,3vw,44px)}
+.col .big{position:absolute;left:50%;bottom:clamp(18px,3vw,44px);transform:translateX(-50%);font-size:clamp(20px,3.4vw,52px);line-height:1}
+.col .info{font-size:clamp(9px,.9vw,13px);line-height:1.35;letter-spacing:.02em}
+.col .info b{display:block;font-weight:400;margin-bottom:1.6em}
+.col .info.r{text-align:center}
+

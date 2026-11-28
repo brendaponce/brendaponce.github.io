@@ -1,12 +1,14 @@
 import { createClient } from "@supabase/supabase-js";
 import { randomUUID } from "node:crypto";
-import type { NewPhoto, PhotoRecord, Store } from "./types";
+import { cleanSocials } from "./socials";
+import type { NewPhoto, PhotoRecord, Settings, Store } from "./types";
 
 const BUCKET = "photos";
 
 interface Row {
   id: string;
   title: string;
+  location: string | null;
   taken_at: string;
   created_at: string;
   width: number;
@@ -17,6 +19,7 @@ interface Row {
 const fromRow = (r: Row): PhotoRecord => ({
   id: r.id,
   title: r.title,
+  location: r.location ?? "",
   takenAt: r.taken_at,
   createdAt: r.created_at,
   width: r.width,
@@ -58,6 +61,7 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
         .insert({
           id,
           title: meta.title,
+          location: meta.location,
           taken_at: meta.takenAt,
           width: meta.width,
           height: meta.height,
@@ -73,7 +77,10 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       return fromRow(data as Row);
     },
     async update(id, patch) {
-      const { data, error } = await db.from("photos").update({ title: patch.title }).eq("id", id).select("*");
+      const changes: Record<string, string> = {};
+      if (patch.title !== undefined) changes.title = patch.title;
+      if (patch.location !== undefined) changes.location = patch.location;
+      const { data, error } = await db.from("photos").update(changes).eq("id", id).select("*");
       if (error) throw new Error(error.message);
       return data && data.length ? fromRow(data[0] as Row) : null;
     },
@@ -84,6 +91,16 @@ export function createSupabaseStore(url: string, serviceKey: string): Store {
       const r = data[0] as Row;
       await bucket().remove([r.full_path, r.thumb_path]);
       return true;
+    },
+    async getSettings(): Promise<Settings> {
+      const { data, error } = await db.from("settings").select("value").eq("key", "socials").maybeSingle();
+      if (error) throw new Error(error.message);
+      return { socials: cleanSocials((data?.value ?? undefined) as Record<string, unknown> | undefined) };
+    },
+    async saveSettings(settings) {
+      const { error } = await db.from("settings").upsert({ key: "socials", value: settings.socials });
+      if (error) throw new Error(error.message);
+      return settings;
     },
     urlFor: (key) => bucket().getPublicUrl(key).data.publicUrl,
   };

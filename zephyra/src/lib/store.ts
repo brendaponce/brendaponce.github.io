@@ -26,6 +26,7 @@ export function toPhoto(store: Store, r: PhotoRecord): Photo {
   return {
     id: r.id,
     title: r.title,
+    location: r.location,
     takenAt: r.takenAt,
     width: r.width,
     height: r.height,
